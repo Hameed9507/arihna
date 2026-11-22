@@ -42,37 +42,59 @@ h1{font:700 clamp(64px,13vw,120px)/1.35 Amiri,serif;margin:0 0 6px;color:var(--i
 .endcard{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(30,18,10,.72);color:#fff;text-align:center;padding:20px}
 .endcard.on{display:flex}
 .endcard b{font-size:22px}
-.info h2{font:700 clamp(36px,5vw,52px)/1.15 Amiri,serif;margin:0 0 4px}
-.epno{font-weight:900;color:var(--accent);font-size:18px}
-.toggle{display:inline-flex;background:var(--bg2);border-radius:999px;padding:5px;margin:14px 0 8px;gap:4px;flex-wrap:wrap}
-.toggle button{border:0;background:transparent;color:var(--ink);font:700 16px Tajawal;padding:10px 18px;border-radius:999px;min-height:44px;cursor:pointer}
-.toggle button[aria-pressed=true]{background:var(--accent);color:#fff}
-.hint{color:var(--soft);font-size:15px;margin:0 0 14px}
-.items{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
-.items li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:700;font-size:16px;display:flex;gap:8px;align-items:center}
+.info h2{font:700 clamp(36px,5vw,52px)/1.15 Amiri,serif;margin:0}
+.epno{font-weight:900;color:var(--accent);font-size:16px}
+.titlerow{display:flex;align-items:center;gap:12px}
+.titlerow .tt{flex:1}
+.arrow{width:46px;height:46px;flex:none;border-radius:50%;border:2px solid var(--accent);background:var(--card);color:var(--accent);display:grid;place-items:center;cursor:pointer;padding:0;transition:transform .2s,background .2s}
+.arrow svg{width:22px;height:22px}
+.arrow:hover:not(:disabled){background:var(--accent);color:#fff}
+.arrow:disabled{opacity:.25;cursor:default}
+.src{font-size:13px;color:var(--soft);margin:4px 0 0;opacity:.85}
+.modes{display:flex;gap:12px;margin:18px 0 14px}
+.modes button{flex:1;max-width:120px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;font:700 14px Tajawal;cursor:pointer;min-height:44px;transition:all .25s}
+.modes button svg{width:34px;height:34px}
+.modes button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.more{margin:14px 0 0}
+.more summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;color:var(--soft);font-weight:700;font-size:15px;padding:8px 4px;min-height:44px}
+.more summary::-webkit-details-marker{display:none}
+.more summary svg{width:16px;height:16px;transition:transform .25s}
+.more[open] summary svg{transform:rotate(180deg)}
+.items{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.items li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:700;font-size:15px;display:flex;gap:8px;align-items:center}
 .items li span{color:var(--accent);font-weight:900}
-.src{font-size:14px;color:var(--soft);margin:0 0 18px}
 .nav{display:flex;gap:10px;flex-wrap:wrap}
 .btn{border:0;border-radius:14px;padding:12px 20px;min-height:48px;font:900 17px Tajawal;cursor:pointer;background:var(--accent);color:#fff}
 .btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
 .btn:disabled{opacity:.4;cursor:default}
-.btn:focus-visible,.toggle button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.btn:focus-visible,.modes button:focus-visible,.arrow:focus-visible,.more summary:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 /* list */
 h3{font:700 32px/1.2 Amiri,serif;margin:0 0 16px}
-.eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:16px}
-.ep{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;gap:14px;align-items:center;padding:12px;cursor:pointer;text-align:start;font:inherit;color:inherit;min-height:44px}
-.ep img{width:72px;aspect-ratio:9/16;object-fit:cover;border-radius:10px;flex:none}
-.ep b{display:block;font-size:19px}
-.ep small{color:var(--soft);font-size:14px}
-.ep.soon{cursor:default;opacity:.72}
-.ep .dot{width:72px;aspect-ratio:9/16;border-radius:10px;flex:none;background:var(--bg2);display:grid;place-items:center;font:900 28px Tajawal;color:var(--soft)}
-.ep[aria-current=true]{outline:3px solid var(--accent2,#C9822B)}
+.eps{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.ep{flex:none;width:104px;scroll-snap-align:start;background:none;border:0;padding:0;cursor:pointer;text-align:center;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:6px}
+.ep img,.ep .dot{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:14px;border:3px solid var(--line);display:block}
+.ep b{font-size:14px;line-height:1.35}
+.ep.soon{cursor:default;opacity:.6}
+.ep .dot{background:var(--card);border-style:dashed;display:grid;place-items:center;font:900 30px Tajawal;color:var(--soft)}
+.ep[aria-current=true] img{border-color:var(--accent2,#C9822B);box-shadow:0 6px 16px rgba(60,30,10,.2)}
+.ep:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:14px}
+/* tips */
 .tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
-.tip{background:var(--bg2);border-radius:18px;padding:18px}
-.tip b{display:block;font-size:18px;margin-bottom:4px}
+.tip{border-radius:22px;padding:18px;display:flex;gap:14px;align-items:flex-start;background:var(--tb);border:1px solid var(--tl)}
+.tip svg.ti{width:68px;height:68px;flex:none}
+.tip b{display:block;font-size:19px;margin-bottom:2px;color:var(--tc)}
+.tip p{margin:0;font-size:16px}
+.t-school{--tb:light-dark(#EFE7F8,#2A2236);--tl:light-dark(#DCCCF0,#3E3352);--tc:light-dark(#6A47A0,#C6AEEB)}
+.t-share{--tb:light-dark(#FDE6DA,#38231B);--tl:light-dark(#F6CDB8,#56362A);--tc:light-dark(#C2532C,#F4A783)}
+.t-quiz{--tb:light-dark(#FCF1CF,#33291A);--tl:light-dark(#F0DC9C,#524324);--tc:light-dark(#9A6F05,#F0C962)}
+.t-order{--tb:var(--card);--tl:var(--line);--tc:var(--ink)}
+.t-order{flex-wrap:wrap}.tip>div:not(.chips){flex:1 1 0}.chips{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:4px 0 0}
+.chips span.c{background:var(--cc);color:#fff;font-weight:900;font-size:15px;border-radius:999px;padding:5px 14px;white-space:nowrap}
+.chips i{font-style:normal;color:var(--soft);font-weight:900}
 footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px}
+.credit{font:700 30px/1.6 Amiri,serif;margin:0 auto 6px;display:table;padding:0 6px;background:linear-gradient(90deg,light-dark(#C4512A,#F2A27A),light-dark(#C98A12,#F3CF72));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:.6px light-dark(rgba(196,90,30,.55),rgba(243,190,110,.5))}
 @media(max-width:600px){.arcade .lbl{display:none}}
-@media(max-width:700px){.player{grid-template-columns:minmax(0,1fr)}.screen{max-width:360px;margin:0 auto;width:100%}.info{text-align:center}.items,.nav{justify-content:center}}
+@media(max-width:700px){.player{grid-template-columns:minmax(0,1fr)}.screen{max-width:360px;margin:0 auto;width:100%}.info{text-align:center}.items,.nav,.modes{justify-content:center}.more{text-align:center}}
 /* quiz */
 .qicon{width:26px;height:26px;flex:none}
 .btn.quiz{display:inline-flex;align-items:center;gap:8px;background:var(--card);color:var(--accent);border:2px solid var(--accent)}
@@ -162,20 +184,18 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
    <div class="endcard" id="endcard"><b id="endtxt"></b><button class="btn" id="endnext" type="button"></button><button class="btn quiz" id="endquiz" type="button"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>اختبر نفسك</button><button class="btn ghost" id="replay" type="button">إعادة الحلقة</button></div>
   </div>
   <div class="info">
-   <div class="epno" id="epno"></div>
-   <h2 id="eptitle"></h2>
-   <div class="toggle" role="group" aria-label="سرعة المقطع">
-    <button type="button" id="tEdu" aria-pressed="true">النسخة التعليمية</button>
-    <button type="button" id="tFast" aria-pressed="false">النسخة السريعة</button>
+   <div class="titlerow">
+    <button class="arrow" id="prev" type="button" aria-label="الحلقة السابقة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="tt"><div class="epno" id="epno"></div><h2 id="eptitle"></h2></div>
+    <button class="arrow" id="next" type="button" aria-label="الحلقة التالية"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
    </div>
-   <p class="hint" id="hint"></p>
-   <ul class="items" id="items"></ul>
    <p class="src" id="src"></p>
-   <p style="margin:0 0 14px"><button class="btn quiz" id="quizbtn" type="button"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>اختبر نفسك · ١٠ أسئلة</button></p>
-   <div class="nav">
-    <button class="btn ghost" id="prev" type="button">الحلقة السابقة</button>
-    <button class="btn" id="next" type="button">الحلقة التالية</button>
+   <div class="modes" role="group" aria-label="نسخة المقطع">
+    <button type="button" id="tEdu" aria-pressed="true" aria-label="النسخة التعليمية، أبطأ مع وقفة بعد كل عنصر"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 9 3 19l21 10 21-10z" fill="currentColor"/><path d="M12 24v9c0 3 5.5 6 12 6s12-3 12-6v-9l-12 5.6z" fill="currentColor" opacity=".8"/><path d="M41 21v11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="41" cy="34" r="2.6" fill="currentColor"/></svg>تعليمية</button>
+    <button type="button" id="tFast" aria-pressed="false" aria-label="النسخة السريعة للنشر في الحالات"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="4" width="22" height="40" rx="5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="21" r="7" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M22 18v6l5-3z" fill="currentColor"/><path d="M20 38h8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M33 13c6-1 9 2 10 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M39 12l4 7-7 1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>سريعة</button>
    </div>
+   <p style="margin:0"><button class="btn quiz" id="quizbtn" type="button"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>اختبر نفسك · ١٠ أسئلة</button></p>
+   <details class="more"><summary>عناصر الحلقة <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><ul class="items" id="items"></ul></details>
   </div>
  </div>
 </section>
@@ -191,16 +211,16 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
  <div class="wrap">
   <h3>كيف تستفيد منها</h3>
   <div class="tips">
-   <div class="tip"><b>للطلاب والمدارس</b>النسخة التعليمية أبطأ، وفيها وقفة بعد كل عنصر ليقرأه الطالب ويحفظه.</div>
-   <div class="tip"><b>للنشر في الحالات</b>النسخة السريعة أقصر، وتناسب الواتساب والإنستغرام وتيك توك.</div>
-   <div class="tip"><b>اختبر نفسك</b>بعد كل حلقة عشرة أسئلة قصيرة، تعرف بها ما حفظت وما يحتاج إلى مراجعة.</div>
-   <div class="tip"><b>بالترتيب</b>ابدأ بالشروط ثم الأركان ثم الواجبات، فكل حلقة تبني على التي قبلها.</div>
+   <div class="tip t-school" style="color:var(--tc)"><svg class="ti" viewBox="0 0 80 80" aria-hidden="true"><rect x="34" y="3" width="12" height="12" rx="2" fill="currentColor"/><path d="M37 12a3 3 0 0 1 6 0z" fill="#FFD37A"/><path d="M14 31 40 15l26 16" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><rect x="19" y="29" width="42" height="26" rx="3" style="fill:light-dark(#FFFFFF,#3A3049)" stroke="currentColor" stroke-width="3.5"/><rect x="24" y="35" width="7" height="7" rx="1.5" fill="currentColor" opacity=".35"/><rect x="49" y="35" width="7" height="7" rx="1.5" fill="currentColor" opacity=".35"/><rect x="36" y="40" width="8" height="15" rx="2" fill="currentColor" opacity=".85"/><ellipse cx="40" cy="78" rx="34" ry="2" fill="currentColor" opacity=".18"/><circle cx="23" cy="55" r="8" fill="#4A2814"/><rect x="14.5" y="63.5" width="17" height="15" rx="8" fill="#4A2814"/><circle cx="57" cy="57" r="7.2" fill="#7A4626"/><rect x="49.5" y="65" width="15" height="13.5" rx="7.5" fill="#7A4626"/></svg><div><b>للطلاب والمدارس</b><p style="color:var(--ink)">النسخة التعليمية أبطأ، وفيها وقفة بعد كل عنصر ليقرأه الطالب ويحفظه.</p></div></div>
+   <div class="tip t-share" style="color:var(--tc)"><svg class="ti" viewBox="0 0 80 80" aria-hidden="true"><rect x="22" y="8" width="34" height="62" rx="8" style="fill:light-dark(#FFFFFF,#4A3128)" stroke="currentColor" stroke-width="3.5"/><circle cx="39" cy="34" r="11" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="15 4"/><path d="M36 29v10l8-5z" fill="currentColor"/><path d="M34 61h10" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M9 26h11a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-5l-5 4v-4a4 4 0 0 1-3-4v-6a4 4 0 0 1 4-4z" fill="currentColor" opacity=".85"/><path d="M58 22c7-2 12 2 14 8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M66 21l6 9-9 3" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>للنشر في الحالات</b><p style="color:var(--ink)">النسخة السريعة أقصر، وتناسب الواتساب والإنستغرام وتيك توك.</p></div></div>
+   <div class="tip t-quiz" style="color:var(--tc)"><svg class="ti" viewBox="-1 0 51 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" style="fill:light-dark(#FFFFFF,#4A3C22)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg><div><b>اختبر نفسك</b><p style="color:var(--ink)">بعد كل حلقة عشرة أسئلة قصيرة، تعرف بها ما حفظت وما يحتاج إلى مراجعة.</p></div></div>
+   <div class="tip t-order"><svg class="ti" viewBox="0 0 80 80" aria-hidden="true"><path d="M12 66h18V50h18V34h18V18" fill="none" stroke="var(--soft)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="21" cy="58" r="6" fill="#E0663A"/><circle cx="39" cy="42" r="6" fill="#0F7C78"/><circle cx="57" cy="26" r="6" fill="#2C6E9E"/></svg><div><b>بالترتيب</b><p>كل حلقة تبني على التي قبلها، فابدأ بالأولى.</p></div><div class="chips" id="chips"></div></div>
   </div>
  </div>
 </section>
 </main>
 <div class="qz" id="qz" role="dialog" aria-modal="true" aria-labelledby="qtitle"><div class="qbox" id="qbox" tabindex="-1"><div class="qhead"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg><b id="qtitle"></b><button class="qclose" id="qclose" type="button" aria-label="إغلاق الاختبار">×</button></div><div class="qdots" id="qdots"></div><div id="qbody" aria-live="polite"></div></div></div>
-<footer><div style="font:700 22px/1.6 Amiri,serif;color:var(--ink);margin-bottom:6px">إعداد: حميد بن علي هزازي</div>تُضاف الحلقات الجديدة إلى هذه الصفحة تباعًا، والرابط لا يتغير.</footer>
+<footer><div class="credit">إعداد: حميد بن علي هزازي</div>تُضاف الحلقات الجديدة إلى هذه الصفحة تباعًا، والرابط لا يتغير.</footer>
 
 <script>
 {
@@ -290,15 +310,14 @@ function drawArcade(){
 }
 function drawList(){
  $('eps').innerHTML=EPS.map(e=>e.ready
-  ?`<div class="epwrap"><button class="ep" type="button" data-id="${e.id}" ${cur.id===e.id?'aria-current="true"':''} style="--accent2:${e.accent}"><img src="${e.poster}" alt=""><span><small>الحلقة ${ORDW[e.n-1]}</small><b>${e.title}</b><small>${e.count}</small></span></button>${QUIZ[e.id]?`<button class="quizchip" type="button" data-q="${e.id}" style="--qc:${e.accent}" aria-label="اختبار ${e.title}">${ICON}اختبار</button>`:''}</div>`
-  :`<div class="ep soon"><span class="dot">${NUM[e.n-1]}</span><span><small>الحلقة ${ORDW[e.n-1]}</small><b>${e.title}</b><small>قريبًا</small></span></div>`).join('');
+  ?`<button class="ep" type="button" data-id="${e.id}" ${cur.id===e.id?'aria-current="true"':''} style="--accent2:${e.accent}" aria-label="الحلقة ${ORDW[e.n-1]} ${e.title}"><img src="${e.poster}" alt=""><b>${e.title}</b></button>`
+  :`<div class="ep soon"><span class="dot">${NUM[e.n-1]}</span><b>${e.title}</b></div>`).join('');
  $('eps').querySelectorAll('button.ep').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id,true)));
- $('eps').querySelectorAll('.quizchip').forEach(b=>b.addEventListener('click',()=>openQuiz(b.dataset.q)));
+ $('chips').innerHTML=ready.map(e=>`<span class="c" style="--cc:${e.accent}">${e.title.replace(' الصلاة','')}</span>`).join('<i>←</i>');
 }
 function setSrc(autoplay){
  vid.src=mode==='edu'?cur.edu:cur.fast; vid.poster=cur.poster; $('endcard').classList.remove('on');
  $('tEdu').setAttribute('aria-pressed',mode==='edu');$('tFast').setAttribute('aria-pressed',mode==='fast');
- $('hint').textContent=mode==='edu'?'أبطأ قليلًا، مع وقفة بعد كل عنصر. مناسبة للطلاب والحفظ.':'بالإيقاع الأصلي للنشر في الحالات ووسائل التواصل.';
  if(autoplay){const p=vid.play();if(p&&p.catch)p.catch(()=>{});}
 }
 function select(id,autoplay){
