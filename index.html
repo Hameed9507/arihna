@@ -73,7 +73,71 @@ h3{font:700 32px/1.2 Amiri,serif;margin:0 0 16px}
 footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px}
 @media(max-width:600px){.arcade .lbl{display:none}}
 @media(max-width:700px){.player{grid-template-columns:minmax(0,1fr)}.screen{max-width:360px;margin:0 auto;width:100%}.info{text-align:center}.items,.nav{justify-content:center}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* quiz */
+.qicon{width:26px;height:26px;flex:none}
+.btn.quiz{display:inline-flex;align-items:center;gap:8px;background:var(--card);color:var(--accent);border:2px solid var(--accent)}
+.btn.quiz:hover .qicon{animation:wig .5s}
+.epwrap{position:relative}
+.epwrap .ep{width:100%;height:100%;padding-inline-end:96px}
+.quizchip{position:absolute;inset-inline-end:10px;bottom:10px;display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid var(--qc);background:var(--bg);color:var(--qc);border-radius:14px;padding:8px 10px 6px;font:900 13px Tajawal;cursor:pointer;min-width:72px;min-height:44px}
+.quizchip .qicon{width:30px;height:30px}
+.quizchip:hover .qicon{animation:wig .5s}
+.quizchip:focus-visible,.opt:focus-visible,.qclose:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+@keyframes wig{0%,100%{transform:rotate(0)}30%{transform:rotate(-12deg)}60%{transform:rotate(9deg)}}
+.saw{font-family:Amiri,serif;font-size:1.35em;line-height:1}
+.qz{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(30,18,10,.55);backdrop-filter:blur(5px)}
+.qz.on{display:flex;animation:fade .25s}
+.qbox{outline:none;position:relative;background:var(--bg);width:min(580px,100%);max-height:100%;overflow:auto;border-radius:26px;padding:18px clamp(16px,4vw,26px) 22px;border-top:8px solid var(--qa);box-shadow:0 24px 60px rgba(30,15,5,.35)}
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qhead .qicon{width:36px;height:36px;color:var(--qa)}
+.qhead b{font:700 26px/1.2 Amiri,serif;flex:1}
+.qclose{border:0;background:var(--bg2);color:var(--ink);width:44px;height:44px;border-radius:50%;font:900 22px Tajawal;cursor:pointer}
+.qdots{display:flex;gap:6px;justify-content:center;margin:0 0 16px;flex-wrap:wrap}
+.qdots span{width:16px;height:16px;border-radius:50%;background:var(--line);transition:background .3s,transform .3s}
+.qdots span.now{background:var(--qa);transform:scale(1.3)}
+.qdots span.ok{background:#2E9E5B}.qdots span.no{background:#D2493B}
+.qcard{animation:qin .45s cubic-bezier(.2,.9,.3,1.2)}
+.qnum{color:var(--qa);font-weight:900;font-size:15px}
+.qcard h4{font:900 clamp(21px,5vw,25px)/1.6 Tajawal;margin:4px 0 14px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:start;padding:12px 14px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:700 clamp(17px,4.4vw,19px)/1.5 Tajawal;min-height:58px;cursor:pointer;animation:pop .45s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:calc(var(--i)*90ms + 150ms);transition:background .25s,border-color .25s,opacity .25s,transform .15s}
+.opt:hover:not(:disabled){border-color:var(--qa);transform:translateY(-2px)}
+.opt:disabled{cursor:default}
+.opt .mk{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center;font:900 16px Tajawal;color:var(--soft);transition:all .25s}
+.opt.ok{background:light-dark(#E2F4E7,#183524);border-color:#2E9E5B}
+.opt.ok .mk{background:#2E9E5B;border-color:#2E9E5B;color:#fff;animation:bump .4s}
+.opt.no{background:light-dark(#FBE3DF,#3A1C18);border-color:#D2493B;animation:shake .45s}
+.opt.no .mk{background:#D2493B;border-color:#D2493B;color:#fff}
+.opt.dim{opacity:.45}
+.mk svg{width:22px;height:22px}
+.mk svg path{stroke-dasharray:30;stroke-dashoffset:30;animation:draw .4s .05s forwards}
+.qx{margin-top:14px;background:var(--bg2);border-inline-start:5px solid var(--qa);border-radius:14px;padding:12px 14px;font-size:17px;animation:fadeup .4s}
+.qx b{display:block;font-size:18px}
+.qx b.g{color:#2E9E5B}.qx b.r{color:#D2493B}
+.qfoot{display:flex;justify-content:center;margin-top:16px}
+.qfoot .btn{background:var(--qa);animation:fadeup .35s}
+.qres{text-align:center;animation:qin .5s}
+.ring{width:190px;height:190px;margin:4px auto 6px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:16}
+.ring .bgc{stroke:var(--line)}.ring .fg{stroke:var(--qa);stroke-linecap:round;transition:stroke-dashoffset 1.3s cubic-bezier(.3,.8,.3,1)}
+.ring .sc{position:absolute;inset:0;display:grid;place-content:center;font:900 52px/1 Tajawal;color:var(--qa)}
+.ring .sc small{font:700 17px Tajawal;color:var(--soft);margin-top:6px}
+.qres h4{font:700 30px/1.3 Amiri,serif;margin:6px 0 4px}
+.qres p{color:var(--soft);margin:0 0 16px}
+.qres .nav{justify-content:center}
+.qres .nav .btn:first-child{background:var(--qa)}
+.pt{position:fixed;width:11px;height:11px;border-radius:50%;pointer-events:none;z-index:70;animation:fly .85s cubic-bezier(.15,.7,.3,1) forwards}
+.pt.sq{border-radius:3px}
+@keyframes fade{from{opacity:0}}
+@keyframes qin{from{opacity:0;transform:translateX(-46px) scale(.97)}}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.92)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+@keyframes bump{50%{transform:scale(1.25)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.4);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.mk svg path{stroke-dashoffset:0}}
 @keyframes glowp{0%,100%{opacity:.55}50%{opacity:1}}
 .lit{animation:glowp 2.6s ease-in-out infinite}
 </style>
@@ -95,7 +159,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
  <div class="wrap player">
   <div class="screen" id="screen">
    <video id="vid" controls playsinline preload="metadata" poster="ep1.jpg"></video>
-   <div class="endcard" id="endcard"><b id="endtxt"></b><button class="btn" id="endnext" type="button"></button><button class="btn ghost" id="replay" type="button">إعادة الحلقة</button></div>
+   <div class="endcard" id="endcard"><b id="endtxt"></b><button class="btn" id="endnext" type="button"></button><button class="btn quiz" id="endquiz" type="button"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>اختبر نفسك</button><button class="btn ghost" id="replay" type="button">إعادة الحلقة</button></div>
   </div>
   <div class="info">
    <div class="epno" id="epno"></div>
@@ -107,6 +171,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
    <p class="hint" id="hint"></p>
    <ul class="items" id="items"></ul>
    <p class="src" id="src"></p>
+   <p style="margin:0 0 14px"><button class="btn quiz" id="quizbtn" type="button"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>اختبر نفسك · ١٠ أسئلة</button></p>
    <div class="nav">
     <button class="btn ghost" id="prev" type="button">الحلقة السابقة</button>
     <button class="btn" id="next" type="button">الحلقة التالية</button>
@@ -128,15 +193,18 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
   <div class="tips">
    <div class="tip"><b>للطلاب والمدارس</b>النسخة التعليمية أبطأ، وفيها وقفة بعد كل عنصر ليقرأه الطالب ويحفظه.</div>
    <div class="tip"><b>للنشر في الحالات</b>النسخة السريعة أقصر، وتناسب الواتساب والإنستغرام وتيك توك.</div>
+   <div class="tip"><b>اختبر نفسك</b>بعد كل حلقة عشرة أسئلة قصيرة، تعرف بها ما حفظت وما يحتاج إلى مراجعة.</div>
    <div class="tip"><b>بالترتيب</b>ابدأ بالشروط ثم الأركان ثم الواجبات، فكل حلقة تبني على التي قبلها.</div>
   </div>
  </div>
 </section>
 </main>
+<div class="qz" id="qz" role="dialog" aria-modal="true" aria-labelledby="qtitle"><div class="qbox" id="qbox" tabindex="-1"><div class="qhead"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg><b id="qtitle"></b><button class="qclose" id="qclose" type="button" aria-label="إغلاق الاختبار">×</button></div><div class="qdots" id="qdots"></div><div id="qbody" aria-live="polite"></div></div></div>
 <footer><div style="font:700 22px/1.6 Amiri,serif;color:var(--ink);margin-bottom:6px">إعداد: حميد بن علي هزازي</div>تُضاف الحلقات الجديدة إلى هذه الصفحة تباعًا، والرابط لا يتغير.</footer>
 
 <script>
 {
+const ICON='<svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>';
 const EPS=[
  {id:'shurut',n:1,title:'شروط الصلاة',count:'تسعة شروط',accent:'#E0663A',ready:true,fast:'ep1.mp4',edu:'ep1-edu.mp4',poster:'ep1.jpg',
   items:['الإسلام','العقل','التمييز','رفع الحدث','إزالة النجاسة','ستر العورة','دخول الوقت','استقبال القبلة','النية'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة».'},
@@ -150,6 +218,43 @@ const EPS=[
  {id:'akhta',n:7,title:'أخطاء تقع في الصلاة',ready:false},
  {id:'imam',n:8,title:'الإمام والمأموم',ready:false},
 ];
+
+// أسئلة الاختبار: الخيار الأول في كل سؤال هو الصحيح، وتُخلط الخيارات عند العرض
+const QUIZ={
+ shurut:[
+  {q:'كم شروط الصلاة؟',o:['تسعة','سبعة','ثمانية','أربعة عشر'],x:'عدّها الشيخ ابن باز تسعة شروط في «الدروس المهمة».'},
+  {q:'ما معنى أن الشيء شرط للصلاة؟',o:['لا تصح الصلاة إلا به','سنة يُثاب فاعلها','يجبره سجود السهو'],x:'الشروط هي التي لا تصح الصلاة إلا بها.'},
+  {q:'متى نتأكد من الشروط؟',o:['قبل التكبير ونحافظ عليها حتى التسليم','بعد السلام','عند الركوع فقط'],x:'تأكد منها قبل أن تكبّر، وحافظ عليها حتى تسلّم.'},
+  {q:'أيّها من شروط الصلاة؟',o:['استقبال القبلة','الطمأنينة','التشهد الأول'],x:'استقبال القبلة شرط، أما الطمأنينة فركن، والتشهد الأول واجب.'},
+  {q:'بماذا يكون رفع الحدث؟',o:['بالوضوء أو الغسل','بغسل الثوب','بالسواك'],x:'يُرفع الحدث الأصغر بالوضوء، والأكبر بالغسل.'},
+  {q:'من أين تكون إزالة النجاسة؟',o:['من البدن والثوب والمكان','من البدن فقط','من المكان فقط'],x:'تُزال النجاسة من البدن والثوب والمكان الذي يصلي فيه.'},
+  {q:'أين محل النية؟',o:['القلب','اللسان','لا محل لها'],x:'النية محلها القلب.'},
+  {q:'ماذا فعل أهل قباء لما جاءهم الخبر وهم في صلاة الصبح؟',o:['استداروا إلى الكعبة وهم في صلاتهم','قطعوا الصلاة وأعادوها','أكملوا إلى جهتهم الأولى'],x:'استداروا إلى الكعبة وهم في صلاتهم، والقصة في صحيح البخاري.'},
+  {q:'إلى أين كانوا يستقبلون قبل الكعبة؟',o:['بيت المقدس','المسجد النبوي','مسجد قباء'],x:'كانوا يستقبلون بيت المقدس، ثم أُمروا باستقبال الكعبة.'},
+  {q:'أيّها ليس من شروط الصلاة؟',o:['قراءة الفاتحة','العقل','التمييز','دخول الوقت'],x:'قراءة الفاتحة ركن من أركان الصلاة، لا شرط.'}],
+ arkan:[
+  {q:'كم أركان الصلاة؟',o:['أربعة عشر','تسعة','ثمانية','اثنا عشر'],x:'عدّها الشيخ ابن باز أربعة عشر ركنًا في «الدروس المهمة».'},
+  {q:'ما أول الأركان؟',o:['القيام مع القدرة','النية','دعاء الاستفتاح'],x:'أولها القيام مع القدرة. أما النية فشرط، ودعاء الاستفتاح سنة.'},
+  {q:'ما حكم تكبيرة الإحرام؟',o:['ركن','واجب','سنة'],x:'تكبيرة الإحرام ركن، وبقية التكبيرات واجبات.'},
+  {q:'متى يكون القيام ركنًا؟',o:['مع القدرة','مطلقًا','في النافلة فقط'],x:'القيام ركن على من قدر عليه، ومن عجز صلى على حسب استطاعته.'},
+  {q:'على كم عضوًا يكون السجود؟',o:['سبعة','خمسة','ستة'],x:'الجبهة مع الأنف، واليدان، والركبتان، وأطراف القدمين. والحديث متفق عليه.'},
+  {q:'في أي شيء تكون الطمأنينة ركنًا؟',o:['في جميع الأفعال','في الركوع فقط','في السجود فقط'],x:'الطمأنينة ركن في جميع أفعال الصلاة.'},
+  {q:'ما الذي يأتي بعد الركوع مباشرة؟',o:['الاعتدال بعد الركوع','السجود','الجلسة بين السجدتين'],x:'بعد الركوع يعتدل قائمًا، ثم يسجد.'},
+  {q:'أيّها من الأركان؟',o:['التشهد الأخير','التشهد الأول','دعاء الاستفتاح'],x:'التشهد الأخير ركن، أما التشهد الأول فواجب.'},
+  {q:'ما حكم الصلاة على النبي ﷺ في التشهد الأخير؟',o:['ركن','سنة','تُترك'],x:'عدّها الشيخ ابن باز ركنًا من أركان الصلاة.'},
+  {q:'بماذا تُختم الصلاة؟',o:['التسليمتان','تسليمة واحدة','الدعاء'],x:'التسليمتان من الأركان كما عدّها الشيخ ابن باز في «الدروس المهمة».'}],
+ wajibat:[
+  {q:'كم واجبات الصلاة؟',o:['ثمانية','تسعة','أربعة عشر'],x:'عدّها الشيخ ابن باز ثمانية واجبات في «الدروس المهمة».'},
+  {q:'من ترك واجبًا ناسيًا فماذا عليه؟',o:['يسجد للسهو','يعيد الصلاة','لا شيء عليه'],x:'من ترك واجبًا ناسيًا جبره بسجود السهو.'},
+  {q:'من ترك واجبًا عمدًا؟',o:['بطلت صلاته','يسجد للسهو','لا شيء عليه'],x:'من ترك واجبًا عمدًا بطلت صلاته.'},
+  {q:'ما الفرق بين الركن والواجب؟',o:['الركن لا يسقط بالنسيان، والواجب يجبره سجود السهو','لا فرق بينهما','الواجب أعظم من الركن'],x:'الركن لا يسقط بالنسيان، أما الواجب فيجبره سجود السهو.'},
+  {q:'من يقول «سمع الله لمن حمده»؟',o:['الإمام والمنفرد','المأموم فقط','الجميع'],x:'يقولها الإمام والمنفرد، والمأموم يقول «ربنا ولك الحمد».'},
+  {q:'من يقول «ربنا ولك الحمد»؟',o:['الإمام والمأموم والمنفرد','الإمام فقط','المأموم فقط'],x:'يقولها الإمام والمأموم والمنفرد.'},
+  {q:'كم مرة يجب قول «سبحان ربي العظيم» في الركوع؟',o:['مرة واحدة','ثلاث مرات','سبع مرات'],x:'الواجب مرة واحدة، وتكرارها أفضل.'},
+  {q:'ماذا يقال بين السجدتين؟',o:['رب اغفر لي','سبحان ربي الأعلى','سمع الله لمن حمده'],x:'يقول بين السجدتين «رب اغفر لي»، والواجب مرة واحدة.'},
+  {q:'أي التكبيرات ليست من الواجبات لأنها ركن؟',o:['تكبيرة الإحرام','تكبيرة الركوع','تكبيرة السجود'],x:'تكبيرة الإحرام ركن، وبقية التكبيرات واجبات.'},
+  {q:'لما قام النبي ﷺ من اثنتين من الظهر ولم يجلس، ماذا فعل؟',o:['سجد سجدتين ثم سلّم','أعاد الصلاة','رجع فجلس'],x:'سجد سجدتين ثم سلّم، والحديث رواه البخاري.'}],
+};
 const NUM=['١','٢','٣','٤','٥','٦','٧','٨','٩','١٠','١١','١٢','١٣','١٤'];
 const ORDW=['الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة'];
 const ready=EPS.filter(e=>e.ready);
@@ -185,9 +290,10 @@ function drawArcade(){
 }
 function drawList(){
  $('eps').innerHTML=EPS.map(e=>e.ready
-  ?`<button class="ep" type="button" data-id="${e.id}" ${cur.id===e.id?'aria-current="true"':''} style="--accent2:${e.accent}"><img src="${e.poster}" alt=""><span><small>الحلقة ${ORDW[e.n-1]}</small><b>${e.title}</b><small>${e.count}</small></span></button>`
+  ?`<div class="epwrap"><button class="ep" type="button" data-id="${e.id}" ${cur.id===e.id?'aria-current="true"':''} style="--accent2:${e.accent}"><img src="${e.poster}" alt=""><span><small>الحلقة ${ORDW[e.n-1]}</small><b>${e.title}</b><small>${e.count}</small></span></button>${QUIZ[e.id]?`<button class="quizchip" type="button" data-q="${e.id}" style="--qc:${e.accent}" aria-label="اختبار ${e.title}">${ICON}اختبار</button>`:''}</div>`
   :`<div class="ep soon"><span class="dot">${NUM[e.n-1]}</span><span><small>الحلقة ${ORDW[e.n-1]}</small><b>${e.title}</b><small>قريبًا</small></span></div>`).join('');
  $('eps').querySelectorAll('button.ep').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id,true)));
+ $('eps').querySelectorAll('.quizchip').forEach(b=>b.addEventListener('click',()=>openQuiz(b.dataset.q)));
 }
 function setSrc(autoplay){
  vid.src=mode==='edu'?cur.edu:cur.fast; vid.poster=cur.poster; $('endcard').classList.remove('on');
@@ -203,6 +309,7 @@ function select(id,autoplay){
  $('eptitle').textContent=e.title;
  $('items').innerHTML=e.items.map((t,i)=>`<li><span>${NUM[i]}</span>${t}</li>`).join('');
  $('src').textContent=e.src;$('src').style.display=e.src?'':'none';
+ $('quizbtn').style.display=QUIZ[e.id]?'':'none';$('endquiz').style.display=QUIZ[e.id]?'':'none';
  const i=ready.indexOf(e);$('prev').disabled=i===0;$('next').disabled=i===ready.length-1;
  setSrc(autoplay);drawArcade();drawList();
  if(location.hash!=='#'+e.id){try{history.replaceState(null,'','#'+e.id);}catch(_){location.hash=e.id;}}
@@ -220,8 +327,94 @@ vid.addEventListener('ended',()=>{
 });
 $('endnext').addEventListener('click',()=>{const i=ready.indexOf(cur);if(ready[i+1])select(ready[i+1].id,true);});
 $('replay').addEventListener('click',()=>{$('endcard').classList.remove('on');vid.currentTime=0;const p=vid.play();if(p&&p.catch)p.catch(()=>{});});
-window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&id!==cur.id&&ready.some(e=>e.id===id))select(id,false);});
-select((location.hash||'').slice(1),false);
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id.endsWith('-quiz')){openQuiz(id.slice(0,-5));return;}if(id&&id!==cur.id&&ready.some(e=>e.id===id))select(id,false);});
+const H0=(location.hash||'').slice(1);
+select(H0.replace(/-quiz$/,''),false);
+
+// ===== الاختبار =====
+const AD=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const LET=['أ','ب','ج','د'];
+const fmt=t=>t.replace(/ﷺ/g,'<span class="saw">ﷺ</span>');
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const CHECK='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+let QS=null, lastFocus=null;
+function burst(el,many){
+ const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+ const cols=[QS?QS.e.accent:'#2E9E5B','#2E9E5B','#F2B33D','#E0663A','#5BB5E0'];
+ const n=many?46:18;
+ for(let i=0;i<n;i++){
+  const d=document.createElement('span'); d.className='pt'+(i%3===0?' sq':'');
+  const a=Math.random()*Math.PI*2, v=(many?140:70)+Math.random()*(many?160:70);
+  d.style.left=cx+'px';d.style.top=cy+'px';d.style.background=cols[i%cols.length];
+  d.style.setProperty('--dx',Math.cos(a)*v+'px');d.style.setProperty('--dy',(Math.sin(a)*v-(many?40:20))+'px');d.style.setProperty('--r',(Math.random()*360)+'deg');
+  document.body.appendChild(d); setTimeout(()=>d.remove(),900);
+ }
+}
+function dots(){
+ $('qdots').innerHTML=QS.qs.map((_,k)=>`<span class="${k<QS.res.length?(QS.res[k]?'ok':'no'):(k===QS.i?'now':'')}"></span>`).join('');
+}
+function openQuiz(id){
+ const e=ready.find(x=>x.id===id); if(!e||!QUIZ[e.id])return;
+ if(cur.id!==e.id)select(e.id,false);
+ try{vid.pause();}catch(_){}
+ lastFocus=document.activeElement;
+ QS={e,i:0,score:0,res:[],qs:QUIZ[e.id].map(q=>({...q,ord:shuf(q.o.map((_,k)=>k))}))};
+ $('qz').style.setProperty('--qa',e.accent);
+ $('qtitle').textContent='اختبار '+e.title;
+ $('qz').classList.add('on'); document.body.style.overflow='hidden';
+ try{history.replaceState(null,'','#'+e.id+'-quiz');}catch(_){}
+ renderQ();
+}
+function closeQuiz(){
+ $('qz').classList.remove('on'); document.body.style.overflow='';
+ try{history.replaceState(null,'','#'+cur.id);}catch(_){}
+ if(lastFocus&&lastFocus.focus)lastFocus.focus();
+}
+function renderQ(){
+ const q=QS.qs[QS.i]; dots();
+ $('qbody').innerHTML=`<div class="qcard"><div class="qnum">السؤال ${AD(QS.i+1)} من ${AD(QS.qs.length)}</div><h4>${fmt(q.q)}</h4><div class="opts">${q.ord.map((k,j)=>`<button class="opt" type="button" style="--i:${j}" data-k="${k}"><span class="mk">${LET[j]}</span><span>${fmt(q.o[k])}</span></button>`).join('')}</div><div id="qx"></div><div class="qfoot" id="qfoot"></div></div>`;
+ $('qbox').scrollTop=0;
+ const bs=[...$('qbody').querySelectorAll('.opt')];
+ bs.forEach(b=>b.addEventListener('click',()=>answer(+b.dataset.k,b,bs)));
+ $('qbox').focus({preventScroll:true});
+}
+function answer(k,btn,bs){
+ const q=QS.qs[QS.i], ok=k===0;
+ bs.forEach(b=>b.disabled=true);
+ const right=bs.find(b=>+b.dataset.k===0);
+ if(ok){btn.classList.add('ok');btn.querySelector('.mk').innerHTML=CHECK;QS.score++;burst(btn,false);}
+ else{btn.classList.add('no');btn.querySelector('.mk').textContent='×';
+  setTimeout(()=>{right.classList.add('ok');right.querySelector('.mk').innerHTML=CHECK;},380);}
+ bs.forEach(b=>{if(b!==btn&&b!==right)b.classList.add('dim');});
+ QS.res.push(ok); dots();
+ $('qx').innerHTML=`<div class="qx">${ok?'<b class="g">إجابة صحيحة</b>':'<b class="r">والصواب «'+fmt(q.o[0])+'»</b>'}${fmt(q.x)}</div>`;
+ const last=QS.i===QS.qs.length-1;
+ $('qfoot').innerHTML=`<button class="btn" type="button" id="qnext">${last?'اعرض النتيجة':'السؤال التالي'}</button>`;
+ $('qnext').addEventListener('click',()=>{if(last)result();else{QS.i++;renderQ();}});
+ setTimeout(()=>{const n=$('qnext');if(n){n.focus({preventScroll:true});n.scrollIntoView({block:'nearest',behavior:'smooth'});}},ok?250:450);
+}
+function result(){
+ const n=QS.qs.length, s=QS.score, C=2*Math.PI*78;
+ QS.i=n; dots();
+ const msg=s===n?['ما شاء الله، أتقنت الحلقة','حفظت كل ما فيها، فثبّته بالعمل في صلاتك']
+  :s>=7?['أحسنت','راجع الأسئلة التي فاتتك، ثم أعد الاختبار']
+  :['بداية طيبة','شاهد الحلقة مرة أخرى، ثم أعد الاختبار'];
+ const i=ready.indexOf(QS.e), nx=ready[i+1];
+ $('qbody').innerHTML=`<div class="qres"><div class="ring"><svg viewBox="0 0 180 180"><circle class="bgc" cx="90" cy="90" r="78"/><circle class="fg" id="qring" cx="90" cy="90" r="78" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="sc"><span id="qcount">${AD(0)}</span><small>من ${AD(n)}</small></div></div><h4>${msg[0]}</h4><p>${msg[1]}</p><div class="nav"><button class="btn" type="button" id="qagain">أعد الاختبار</button><button class="btn ghost" type="button" id="qwatch">شاهد الحلقة</button>${nx&&QUIZ[nx.id]?`<button class="btn ghost" type="button" id="qnx">اختبار ${nx.title}</button>`:''}</div></div>`;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{$('qring').style.strokeDashoffset=C*(1-s/n);}));
+ const t0=performance.now(), dur=1300;
+ (function tick(t){const p=Math.min(1,(t-t0)/dur);$('qcount').textContent=AD(Math.round(s*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(tick);else if(s===n)burst($('qring'),true);})(t0);
+ $('qagain').addEventListener('click',()=>openQuiz(QS.e.id));
+ $('qwatch').addEventListener('click',()=>{closeQuiz();select(QS.e.id,true);});
+ if($('qnx'))$('qnx').addEventListener('click',()=>openQuiz(nx.id));
+ setTimeout(()=>$('qagain').focus({preventScroll:true}),100);
+}
+$('quizbtn').addEventListener('click',()=>openQuiz(cur.id));
+$('endquiz').addEventListener('click',()=>openQuiz(cur.id));
+$('qclose').addEventListener('click',closeQuiz);
+$('qz').addEventListener('click',ev=>{if(ev.target===$('qz'))closeQuiz();});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&$('qz').classList.contains('on'))closeQuiz();});
+if(H0.endsWith('-quiz'))openQuiz(H0.slice(0,-5));
 }
 </script>
 </body>
