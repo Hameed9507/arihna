@@ -92,6 +92,10 @@ h3{font:700 32px/1.2 Amiri,serif;margin:0 0 16px}
 .chips span.c{background:var(--cc);color:#fff;font-weight:900;font-size:15px;border-radius:999px;padding:5px 14px;white-space:nowrap}
 .chips i{font-style:normal;color:var(--soft);font-weight:900}
 footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px}
+.visits{display:table;margin:0 auto 12px;font-size:15px;font-weight:700;color:var(--soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 16px}
+.visits[hidden]{display:none}
+.visits svg{width:18px;height:18px;vertical-align:-4px;margin-inline-end:6px}
+.visits b{font-weight:900;color:var(--ink)}
 .credit{font:700 30px/1.6 Amiri,serif;margin:0 auto 6px;display:table;padding:0 6px;background:linear-gradient(90deg,light-dark(#C4512A,#F2A27A),light-dark(#C98A12,#F3CF72));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:.6px light-dark(rgba(196,90,30,.55),rgba(243,190,110,.5))}
 @media(max-width:600px){.arcade .lbl{display:none}}
 @media(max-width:700px){.player{grid-template-columns:minmax(0,1fr)}.screen{max-width:360px;margin:0 auto;width:100%}.info{text-align:center}.items,.nav,.modes{justify-content:center}.more{text-align:center}}
@@ -220,7 +224,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
 </section>
 </main>
 <div class="qz" id="qz" role="dialog" aria-modal="true" aria-labelledby="qtitle"><div class="qbox" id="qbox" tabindex="-1"><div class="qhead"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg><b id="qtitle"></b><button class="qclose" id="qclose" type="button" aria-label="إغلاق الاختبار">×</button></div><div class="qdots" id="qdots"></div><div id="qbody" aria-live="polite"></div></div></div>
-<footer><div class="credit">إعداد: حميد بن علي هزازي</div>تُضاف الحلقات الجديدة إلى هذه الصفحة تباعًا، والرابط لا يتغير.</footer>
+<footer><p class="visits" id="visits" hidden></p><div class="credit">إعداد: حميد بن علي هزازي</div>تُضاف الحلقات الجديدة إلى هذه الصفحة تباعًا، والرابط لا يتغير.</footer>
 
 <script>
 {
@@ -436,5 +440,15 @@ document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&$('qz').classList
 if(H0.endsWith('-quiz'))openQuiz(H0.slice(0,-5));
 }
 </script>
+<script>
+/* عدّاد الزوار من GoatCounter */
+fetch('https://hameed9507.goatcounter.com/counter/' + encodeURIComponent('/arihna/') + '.json')
+ .then(r => r.ok ? r.json() : Promise.reject()).then(d => {
+  const v = document.getElementById('visits');
+  v.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>عدد زوار السلسلة <b>' + Number(String(d.count).replace(/[^0-9]/g,'')).toLocaleString('ar-SA') + '</b>';
+  v.hidden = false;
+ }).catch(() => {});
+</script>
+<script data-goatcounter="https://hameed9507.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
