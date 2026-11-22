@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أرحنا بها</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@500;700;900&display=swap">
+<style>
+/*
+VOICE: هادئ وقور تعليمي، قريب من الناس
+IDEA: رواق مسجد، كل قوس فيه حلقة من السلسلة
+PICTURE: واجهة رواق بسبعة أقواس، المضيء منها حلقات جاهزة والباقي قريبًا
+COLOUR and TYPE: رملي دافئ وبني حبري، ولكل حلقة لونها؛ أميري للعناوين والحديث وتجوال للنص
+LAYOUT: عنوان ثم الرواق ثم المشغّل مع ما ستتعلمه ثم قائمة الحلقات ثم كيف تستفيد
+*/
+:root{color-scheme:light dark;
+ --bg:light-dark(#F7EEDF,#1E1712);--bg2:light-dark(#EFE2CC,#2A2019);--card:light-dark(#FFFBF4,#2B211A);
+ --ink:light-dark(#3B2416,#F3E6D3);--soft:light-dark(#7A5A44,#C9B39C);--line:light-dark(#E3D2B6,#3E3127);
+ --stone:light-dark(#E6CD9E,#5A4632);--stone2:light-dark(#D9B57A,#7A5E40);--arch:light-dark(#F8EEDC,#241B15)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 Tajawal,'Noto Naskh Arabic',sans-serif;overflow-x:clip}
+.band{padding:clamp(24px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1180px;margin:0 auto}
+header{text-align:center;padding-bottom:8px}
+h1{font:700 clamp(64px,13vw,120px)/1.35 Amiri,serif;margin:0 0 6px;color:var(--ink);position:relative;z-index:1}
+.sub{display:inline-block;font-weight:900;font-size:clamp(20px,3.4vw,28px);margin:6px 0 14px;background:linear-gradient(transparent 55%,rgba(240,140,60,.38) 55% 92%,transparent 92%);padding:0 6px}
+.hadith{font:700 clamp(22px,3.6vw,30px)/1.6 Amiri,serif;margin:4px 0 0}
+.ref{color:var(--soft);font-size:14px}
+/* arcade */
+.arcade{margin:22px auto 0;max-width:1000px}
+.arcade svg{width:100%;height:auto;display:block}
+.archbtn{cursor:pointer}.archbtn:focus{outline:none}.archbtn:focus-visible .face{stroke:var(--ink);stroke-width:4}
+.archbtn .face{transition:transform .25s}
+.archbtn:hover .face{filter:brightness(1.06)}
+.note{text-align:center;color:var(--soft);font-size:14px;margin:10px 0 0}
+/* player */
+.player{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:start}
+.screen{position:relative;aspect-ratio:9/16;border-radius:26px;overflow:hidden;background:#000;box-shadow:0 18px 40px rgba(60,30,10,.25);border:6px solid var(--accent,#C9822B)}
+.screen video{width:100%;height:100%;display:block;object-fit:cover;background:#000}
+.endcard{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(30,18,10,.72);color:#fff;text-align:center;padding:20px}
+.endcard.on{display:flex}
+.endcard b{font-size:22px}
+.info h2{font:700 clamp(36px,5vw,52px)/1.15 Amiri,serif;margin:0 0 4px}
+.epno{font-weight:900;color:var(--accent);font-size:18px}
+.toggle{display:inline-flex;background:var(--bg2);border-radius:999px;padding:5px;margin:14px 0 8px;gap:4px;flex-wrap:wrap}
+.toggle button{border:0;background:transparent;color:var(--ink);font:700 16px Tajawal;padding:10px 18px;border-radius:999px;min-height:44px;cursor:pointer}
+.toggle button[aria-pressed=true]{background:var(--accent);color:#fff}
+.hint{color:var(--soft);font-size:15px;margin:0 0 14px}
+.items{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.items li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:700;font-size:16px;display:flex;gap:8px;align-items:center}
+.items li span{color:var(--accent);font-weight:900}
+.src{font-size:14px;color:var(--soft);margin:0 0 18px}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:14px;padding:12px 20px;min-height:48px;font:900 17px Tajawal;cursor:pointer;background:var(--accent);color:#fff}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible,.toggle button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+/* list */
+h3{font:700 32px/1.2 Amiri,serif;margin:0 0 16px}
+.eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:16px}
+.ep{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;gap:14px;align-items:center;padding:12px;cursor:pointer;text-align:start;font:inherit;color:inherit;min-height:44px}
+.ep img{width:72px;aspect-ratio:9/16;object-fit:cover;border-radius:10px;flex:none}
+.ep b{display:block;font-size:19px}
+.ep small{color:var(--soft);font-size:14px}
+.ep.soon{cursor:default;opacity:.72}
+.ep .dot{width:72px;aspect-ratio:9/16;border-radius:10px;flex:none;background:var(--bg2);display:grid;place-items:center;font:900 28px Tajawal;color:var(--soft)}
+.ep[aria-current=true]{outline:3px solid var(--accent2,#C9822B)}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.tip{background:var(--bg2);border-radius:18px;padding:18px}
+.tip b{display:block;font-size:18px;margin-bottom:4px}
+footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px}
+@media(max-width:600px){.arcade .lbl{display:none}}
+@media(max-width:700px){.player{grid-template-columns:minmax(0,1fr)}.screen{max-width:360px;margin:0 auto;width:100%}.info{text-align:center}.items,.nav{justify-content:center}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@keyframes glowp{0%,100%{opacity:.55}50%{opacity:1}}
+.lit{animation:glowp 2.6s ease-in-out infinite}
+</style>
+</head>
+<body>
+<header class="band" style="padding-bottom:0">
+ <div class="wrap">
+  <h1>أرِحنا بها</h1>
+  <div class="sub">سلسلة في أحكام الصلاة</div>
+  <p class="hadith">«يا بلال أقم الصلاة أرحنا بها»</p>
+  <div class="ref">رواه أبو داود</div>
+  <div class="arcade" id="arcade" aria-label="حلقات السلسلة"></div>
+  <p class="note">اضغط على قوس مضيء لتشاهد الحلقة</p>
+ </div>
+</header>
+
+<main>
+<section class="band" id="watch">
+ <div class="wrap player">
+  <div class="screen" id="screen">
+   <video id="vid" controls playsinline preload="metadata" poster="ep1.jpg"></video>
+   <div class="endcard" id="endcard"><b id="endtxt"></b><button class="btn" id="endnext" type="button"></button><button class="btn ghost" id="replay" type="button">إعادة الحلقة</button></div>
+  </div>
+  <div class="info">
+   <div class="epno" id="epno"></div>
+   <h2 id="eptitle"></h2>
+   <div class="toggle" role="group" aria-label="سرعة المقطع">
+    <button type="button" id="tEdu" aria-pressed="true">النسخة التعليمية</button>
+    <button type="button" id="tFast" aria-pressed="false">النسخة السريعة</button>
+   </div>
+   <p class="hint" id="hint"></p>
+   <ul class="items" id="items"></ul>
+   <p class="src" id="src"></p>
+   <div class="nav">
+    <button class="btn ghost" id="prev" type="button">الحلقة السابقة</button>
+    <button class="btn" id="next" type="button">الحلقة التالية</button>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="band" style="background:var(--bg2)">
+ <div class="wrap">
+  <h3>حلقات السلسلة</h3>
+  <div class="eps" id="eps"></div>
+ </div>
+</section>
+
+<section class="band">
+ <div class="wrap">
+  <h3>كيف تستفيد منها</h3>
+  <div class="tips">
+   <div class="tip"><b>للطلاب والمدارس</b>النسخة التعليمية أبطأ، وفيها وقفة بعد كل عنصر ليقرأه الطالب ويحفظه.</div>
+   <div class="tip"><b>للنشر في الحالات</b>النسخة السريعة أقصر، وتناسب الواتساب والإنستغرام وتيك توك.</div>
+   <div class="tip"><b>بالترتيب</b>ابدأ بالشروط ثم الأركان ثم الواجبات، فكل حلقة تبني على التي قبلها.</div>
+  </div>
+ </div>
+</section>
+</main>
+<footer><div style="font:700 22px/1.6 Amiri,serif;color:var(--ink);margin-bottom:6px">إعداد: حميد بن علي هزازي</div>تُضاف الحلقات الجديدة إلى هذه الصفحة تباعًا، والرابط لا يتغير.</footer>
+
+<script>
+{
+const EPS=[
+ {id:'shurut',n:1,title:'شروط الصلاة',count:'تسعة شروط',accent:'#E0663A',ready:true,fast:'ep1.mp4',edu:'ep1-edu.mp4',poster:'ep1.jpg',
+  items:['الإسلام','العقل','التمييز','رفع الحدث','إزالة النجاسة','ستر العورة','دخول الوقت','استقبال القبلة','النية'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة».'},
+ {id:'arkan',n:2,title:'أركان الصلاة',count:'أربعة عشر ركنًا',accent:'#0F7C78',ready:true,fast:'ep2.mp4',edu:'ep2-edu.mp4',poster:'ep2.jpg',
+  items:['القيام مع القدرة','تكبيرة الإحرام','قراءة الفاتحة','الركوع','الاعتدال بعد الركوع','السجود على الأعضاء السبعة','الرفع من السجود','الجلسة بين السجدتين','الطمأنينة في جميع الأفعال','الترتيب بين الأركان','التشهد الأخير','الجلوس له','الصلاة على النبي ﷺ','التسليمتان'],src:''},
+ {id:'wajibat',n:3,title:'واجبات الصلاة',count:'ثمانية واجبات',accent:'#2C6E9E',ready:true,fast:'ep3.mp4',edu:'ep3-edu.mp4',poster:'ep3.jpg',
+  items:['التكبيرات غير تكبيرة الإحرام','قول سمع الله لمن حمده','قول ربنا ولك الحمد','قول سبحان ربي العظيم في الركوع','قول سبحان ربي الأعلى في السجود','قول رب اغفر لي بين السجدتين','التشهد الأول','الجلوس للتشهد الأول'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة».'},
+ {id:'sunan',n:4,title:'سنن الصلاة',ready:false},
+ {id:'sahw',n:5,title:'سجود السهو',ready:false},
+ {id:'mubtilat',n:6,title:'مبطلات الصلاة',ready:false},
+ {id:'akhta',n:7,title:'أخطاء تقع في الصلاة',ready:false},
+ {id:'imam',n:8,title:'الإمام والمأموم',ready:false},
+];
+const NUM=['١','٢','٣','٤','٥','٦','٧','٨','٩','١٠','١١','١٢','١٣','١٤'];
+const ORDW=['الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة'];
+const ready=EPS.filter(e=>e.ready);
+const $=id=>document.getElementById(id);
+const vid=$('vid');
+let cur=ready[0], mode='edu';
+try{const m=localStorage.getItem('arihna-mode');if(m==='fast'||m==='edu')mode=m;}catch(e){}
+
+// arcade picture
+function drawArcade(){
+ const n=EPS.length, W=1000, H=330, aw=W/n;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="رواق السلسلة"><defs>`;
+ EPS.forEach(e=>{if(e.ready)s+=`<radialGradient id="g${e.n}" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="${e.accent}" stop-opacity=".55"/><stop offset="1" stop-color="${e.accent}" stop-opacity="0"/></radialGradient>`;});
+ s+=`</defs><rect x="0" y="18" width="${W}" height="22" rx="4" fill="var(--stone2)"/><rect x="10" y="38" width="${W-20}" height="16" fill="var(--stone)"/>`;
+ EPS.forEach((e,k)=>{
+  const x=W-(k+1)*aw, cx=x+aw/2, top=70, bot=286, isCur=cur&&e.id===cur.id;
+  const path=`M${x+16} ${bot} L${x+16} ${top+60} Q${cx} ${top-18} ${x+aw-16} ${top+60} L${x+aw-16} ${bot} Z`;
+  s+=`<g class="${e.ready?'archbtn':''}" ${e.ready?`tabindex="0" role="button" data-id="${e.id}" aria-label="الحلقة ${ORDW[e.n-1]} ${e.title}"`:''}>`;
+  s+=`<path class="face" d="${path}" fill="var(--arch)" stroke="${e.ready?e.accent:'var(--line)'}" stroke-width="${isCur?7:3}"/>`;
+  if(e.ready)s+=`<ellipse class="lit" cx="${cx}" cy="${top+110}" rx="${aw*.42}" ry="80" fill="url(#g${e.n})"/>`;
+  s+=`<line x1="${cx}" y1="${top+18}" x2="${cx}" y2="${top+58}" stroke="var(--soft)" stroke-width="2"/>`;
+  s+=`<rect x="${cx-15}" y="${top+58}" width="30" height="40" rx="8" fill="${e.ready?'#FFE7A8':'var(--bg2)'}" stroke="${e.ready?e.accent:'var(--line)'}" stroke-width="4"/>`;
+  s+=`<text x="${cx}" y="${top+160}" text-anchor="middle" font-family="Tajawal" font-weight="900" font-size="52" fill="${e.ready?e.accent:'var(--soft)'}">${NUM[e.n-1]}</text>`;
+  s+=`<text class="lbl" x="${cx}" y="${top+200}" text-anchor="middle" font-family="Tajawal" font-weight="700" font-size="${e.title.length>12?13:16}" fill="var(--ink)">${e.ready?e.title:'قريبًا'}</text></g>`;
+  s+=`<rect x="${x-6}" y="54" width="12" height="${bot-54}" fill="var(--stone2)"/>`;
+ });
+ s+=`<rect x="${W-6}" y="54" width="12" height="232" fill="var(--stone2)"/><rect x="0" y="286" width="${W}" height="18" rx="3" fill="var(--stone2)"/></svg>`;
+ $('arcade').innerHTML=s;
+ $('arcade').querySelectorAll('.archbtn').forEach(g=>{
+  const go=()=>{select(g.dataset.id,true);};
+  g.addEventListener('click',go);g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();go();}});
+ });
+}
+function drawList(){
+ $('eps').innerHTML=EPS.map(e=>e.ready
+  ?`<button class="ep" type="button" data-id="${e.id}" ${cur.id===e.id?'aria-current="true"':''} style="--accent2:${e.accent}"><img src="${e.poster}" alt=""><span><small>الحلقة ${ORDW[e.n-1]}</small><b>${e.title}</b><small>${e.count}</small></span></button>`
+  :`<div class="ep soon"><span class="dot">${NUM[e.n-1]}</span><span><small>الحلقة ${ORDW[e.n-1]}</small><b>${e.title}</b><small>قريبًا</small></span></div>`).join('');
+ $('eps').querySelectorAll('button.ep').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id,true)));
+}
+function setSrc(autoplay){
+ vid.src=mode==='edu'?cur.edu:cur.fast; vid.poster=cur.poster; $('endcard').classList.remove('on');
+ $('tEdu').setAttribute('aria-pressed',mode==='edu');$('tFast').setAttribute('aria-pressed',mode==='fast');
+ $('hint').textContent=mode==='edu'?'أبطأ قليلًا، مع وقفة بعد كل عنصر. مناسبة للطلاب والحفظ.':'بالإيقاع الأصلي للنشر في الحالات ووسائل التواصل.';
+ if(autoplay){const p=vid.play();if(p&&p.catch)p.catch(()=>{});}
+}
+function select(id,autoplay){
+ const e=ready.find(x=>x.id===id)||ready[0]; cur=e;
+ document.documentElement.style.setProperty('--accent',e.accent);
+ $('screen').style.setProperty('--accent',e.accent);
+ $('epno').textContent='الحلقة '+ORDW[e.n-1]+' · '+e.count;
+ $('eptitle').textContent=e.title;
+ $('items').innerHTML=e.items.map((t,i)=>`<li><span>${NUM[i]}</span>${t}</li>`).join('');
+ $('src').textContent=e.src;$('src').style.display=e.src?'':'none';
+ const i=ready.indexOf(e);$('prev').disabled=i===0;$('next').disabled=i===ready.length-1;
+ setSrc(autoplay);drawArcade();drawList();
+ if(location.hash!=='#'+e.id){try{history.replaceState(null,'','#'+e.id);}catch(_){location.hash=e.id;}}
+ if(autoplay)$('watch').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('tEdu').addEventListener('click',()=>{mode='edu';try{localStorage.setItem('arihna-mode',mode)}catch(e){}setSrc(true);});
+$('tFast').addEventListener('click',()=>{mode='fast';try{localStorage.setItem('arihna-mode',mode)}catch(e){}setSrc(true);});
+$('prev').addEventListener('click',()=>{const i=ready.indexOf(cur);if(i>0)select(ready[i-1].id,true);});
+$('next').addEventListener('click',()=>{const i=ready.indexOf(cur);if(i<ready.length-1)select(ready[i+1].id,true);});
+vid.addEventListener('ended',()=>{
+ const i=ready.indexOf(cur), nx=ready[i+1];
+ $('endtxt').textContent=nx?'أحسنت، انتهت حلقة '+cur.title:'انتهت الحلقات المنشورة حتى الآن';
+ $('endnext').style.display=nx?'':'none'; if(nx)$('endnext').textContent='الحلقة التالية: '+nx.title;
+ $('endcard').classList.add('on');
+});
+$('endnext').addEventListener('click',()=>{const i=ready.indexOf(cur);if(ready[i+1])select(ready[i+1].id,true);});
+$('replay').addEventListener('click',()=>{$('endcard').classList.remove('on');vid.currentTime=0;const p=vid.play();if(p&&p.catch)p.catch(()=>{});});
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&id!==cur.id&&ready.some(e=>e.id===id))select(id,false);});
+select((location.hash||'').slice(1),false);
+}
+</script>
+</body>
+</html>
