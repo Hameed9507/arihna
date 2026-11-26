@@ -200,11 +200,29 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
 @keyframes glowp{0%,100%{opacity:.55}50%{opacity:1}}
 .lit{animation:glowp 2.6s ease-in-out infinite}
 .share{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px}
-.sbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 18px;border-radius:40px;font:900 16px Tajawal;cursor:pointer;border:2px solid var(--accent,#C9822B);background:var(--accent,#C9822B);color:#fff}
-.sbtn.ghost{background:var(--card);color:var(--accent,#C9822B)}
+.sbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 18px;border-radius:40px;font:900 16px Tajawal;cursor:pointer;border:2px solid var(--btn,var(--accent,#C9822B));background:var(--btn,var(--accent,#C9822B));color:#fff;transition:transform .12s,background .2s}
+.sbtn.ghost{background:var(--card);color:var(--btn,var(--accent,#C9822B))}
+.sbtn:active{transform:scale(.95)}
 .sbtn svg{width:20px;height:20px;flex:none}
 .sbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
-.sbtn.done{background:#3E9B5A;border-color:#3E9B5A;color:#fff}
+.sbtn.done{background:#2F7D47;border-color:#2F7D47;color:#fff}
+/* لمسات التفاعل */
+.archbtn .face{transition:transform .2s,fill .2s;transform-box:fill-box;transform-origin:50% 100%}
+.archbtn:active .face{fill:color-mix(in srgb,var(--ac) 24%,var(--arch));transform:scale(.97)}
+.ep img{transition:transform .15s,box-shadow .2s}
+.ep:active img{transform:scale(.95)}
+.pick{display:none;text-align:center;margin:6px 0 0}
+.pickbtn{background:none;border:0;min-height:44px;padding:6px 14px;font:900 16px Tajawal;color:var(--btn,var(--accent));cursor:pointer;text-decoration:underline;text-underline-offset:6px}
+.pickbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:10px}
+@media(max-width:600px){.pick{display:block}}
+.soontag{font:900 12px Tajawal;color:#fff;background:var(--soft);border-radius:20px;padding:2px 10px}
+.qmiss{text-align:start}
+.qmiss h4{text-align:center;margin:0 0 14px}
+.mi{border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 12px;background:var(--card)}
+.mi b{display:block;font-size:17px;line-height:1.6}
+.mi .ma{color:var(--btn,var(--qa));font-weight:900;margin:6px 0 4px}
+.mi p{margin:4px 0 0;line-height:1.7}
+.qmiss .nav{justify-content:center}
 </style>
 </head>
 <body>
@@ -216,6 +234,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
   <div class="ref">رواه أبو داود</div>
   <div class="arcade" id="arcade" aria-label="حلقات السلسلة"></div>
   <p class="note">اضغط على قوس مضيء لتشاهد الحلقة</p>
+  <p class="pick"><button class="pickbtn" id="pickbtn" type="button">اختر الحلقة بالاسم</button></p>
   <div class="share"><button class="sbtn ghost" id="shareall" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3" fill="currentColor"/><circle cx="6" cy="12" r="3" fill="currentColor"/><circle cx="18" cy="19" r="3" fill="currentColor"/><path d="M8.6 10.7l6.8-4M8.6 13.3l6.8 4" stroke="currentColor" stroke-width="2"/></svg><span>شارك السلسلة</span></button></div>
  </div>
 </header>
@@ -240,7 +259,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
  </div>
 </section>
 
-<section class="band" style="background:var(--bg2)">
+<section class="band" id="list" style="background:var(--bg2)">
  <div class="wrap">
   <h3>حلقات السلسلة</h3>
   <div class="eps" id="eps"></div>
@@ -266,22 +285,22 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
 {
 const ICON='<svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>';
 const EPS=[
- {id:'shurut',n:1,title:'شروط الصلاة',count:'تسعة شروط',accent:'#E0663A',ready:true,fast:'ep1.mp4',edu:'ep1-edu.mp4',poster:'ep1.jpg',
-  items:['الإسلام','العقل','التمييز','رفع الحدث','إزالة النجاسة','ستر العورة','دخول الوقت','استقبال القبلة','النية'],notes:['الشرط لا تصح الصلاة إلا به، فتأكد منه قبل التكبير وحافظ عليه حتى التسليم','يُرفع الحدث الأصغر بالوضوء، والأكبر بالغسل','تُزال النجاسة من البدن والثوب والمكان','النية محلها القلب'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة».'},
+ {id:'shurut',n:1,title:'شروط الصلاة',count:'تسعة شروط',accent:'#E0663A',btn:'#BA5530',ready:true,fast:'ep1.mp4',edu:'ep1-edu.mp4',poster:'ep1.jpg',
+  items:['الإسلام','العقل','التمييز','رفع الحدث','إزالة النجاسة','ستر العورة','دخول الوقت','استقبال القبلة','النية'],notes:['الشرط لا تصح الصلاة إلا به، فتأكد منه قبل التكبير وحافظ عليه حتى التسليم','من صلى ناسيًا أنه على غير وضوء تطهّر وأعاد صلاته','من لم يعلم بنجاسة في ثوبه أو بدنه إلا بعد الصلاة قال فيه الشيخ ابن باز: «فصلاته صحيحة»','يُرفع الحدث الأصغر بالوضوء، والأكبر بالغسل، ويقوم التيمم مقامهما عند فقد الماء أو العجز عن استعماله','تُزال النجاسة من البدن والثوب والمكان','النية محلها القلب'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة»، وحكم من نسي الحدث أو النجاسة من مجموع فتاواه (10/401).'},
  {id:'arkan',n:2,title:'أركان الصلاة',count:'أربعة عشر ركنًا',accent:'#0F7C78',ready:true,fast:'ep2.mp4',edu:'ep2-edu.mp4',poster:'ep2.jpg',
-  items:['القيام مع القدرة','تكبيرة الإحرام','قراءة الفاتحة','الركوع','الاعتدال بعد الركوع','السجود على الأعضاء السبعة','الرفع من السجود','الجلسة بين السجدتين','الطمأنينة في جميع الأفعال','الترتيب بين الأركان','التشهد الأخير','الجلوس له','الصلاة على النبي صلى الله عليه وسلم','التسليمتان'],notes:['القيام ركن على من قدر عليه، ومن عجز صلى على حسب استطاعته','تكبيرة الإحرام ركن، وبقية التكبيرات واجبات','السجود على سبعة أعضاء: الجبهة مع الأنف، واليدان، والركبتان، وأطراف القدمين','الطمأنينة ركن في جميع أفعال الصلاة','التشهد الأخير ركن، والتشهد الأول واجب'],src:''},
+  items:['القيام مع القدرة','تكبيرة الإحرام','قراءة الفاتحة','الركوع','الاعتدال بعد الركوع','السجود على الأعضاء السبعة','الرفع من السجود','الجلسة بين السجدتين','الطمأنينة في جميع الأفعال','الترتيب بين الأركان','التشهد الأخير','الجلوس له','الصلاة على النبي صلى الله عليه وسلم','التسليمتان'],notes:['القيام ركن في الفريضة على من قدر عليه، ومن عجز صلى على حسب استطاعته','تكبيرة الإحرام ركن، وبقية التكبيرات واجبات','السجود على سبعة أعضاء: الجبهة مع الأنف، واليدان، والركبتان، وأطراف القدمين','الطمأنينة ركن في جميع أفعال الصلاة','التشهد الأخير ركن، والتشهد الأول واجب'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة»، الدرس السابع.'},
  {id:'wajibat',n:3,title:'واجبات الصلاة',count:'ثمانية واجبات',accent:'#2C6E9E',ready:true,fast:'ep3.mp4',edu:'ep3-edu.mp4',poster:'ep3.jpg',
   items:['التكبيرات غير تكبيرة الإحرام','قول سمع الله لمن حمده','قول ربنا ولك الحمد','قول سبحان ربي العظيم في الركوع','قول سبحان ربي الأعلى في السجود','قول رب اغفر لي بين السجدتين','التشهد الأول','الجلوس للتشهد الأول'],notes:['من ترك واجبًا ناسيًا جبره بسجود السهو، ومن تركه عمدًا بطلت صلاته','الركن لا يسقط بالنسيان، والواجب يجبره سجود السهو','«سمع الله لمن حمده» للإمام والمنفرد، و«ربنا ولك الحمد» للإمام والمأموم والمنفرد','الواجب في التسبيح مرة واحدة، وتكراره أفضل'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة».'},
- {id:'sunan',n:4,title:'سنن الصلاة',count:'ست عشرة سنة',accent:'#5A8F29',ready:true,fast:'ep4.mp4',edu:'ep4-edu.mp4',poster:'ep4.jpg',
+ {id:'sunan',n:4,title:'سنن الصلاة',count:'ست عشرة سنة من سنن الصلاة',accent:'#5A8F29',btn:'#507F24',ready:true,fast:'ep4.mp4',edu:'ep4-edu.mp4',poster:'ep4.jpg',
   items:['دعاء الاستفتاح','وضع اليمنى على اليسرى في القيام','رفع اليدين في مواضعه الأربعة','الزيادة على تسبيحة في الركوع والسجود','الزيادة على «ربنا ولك الحمد» وتكرار «رب اغفر لي»','استواء الرأس مع الظهر في الركوع','مجافاة العضدين والبطن والفخذين في السجود','رفع الذراعين عن الأرض في السجود','الافتراش في التشهد الأول وبين السجدتين','التورك في التشهد الأخير من الثلاثية والرباعية','الإشارة بالسبابة في التشهد','الصلاة على النبي صلى الله عليه وسلم في التشهد الأول','الدعاء في التشهد الأخير','الجهر بالقراءة في الصلاة الجهرية','الإسرار بها في الصلاة السرية','قراءة ما تيسر بعد الفاتحة'],notes:['السنن لا تبطل الصلاة بتركها، لكنها تكملها ويؤجر فاعلها','التسبيحة الواحدة واجبة، وما زاد عليها سنة','رفع اليدين في أربعة مواضع: عند التكبير، والركوع، والرفع منه، والقيام إلى الثالثة','الافتراش في التشهد الأول وبين السجدتين، والتورك في التشهد الأخير من الثلاثية والرباعية'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة».'},
  {id:'sahw',n:5,title:'سجود السهو',count:'ثلاثة أسباب',accent:'#6B4FA3',ready:true,fast:'ep5.mp4',edu:'ep5-edu.mp4',poster:'ep5.jpg',
-  items:['الزيادة كأن يزيد ركوعًا أو سجودًا أو ركعة ساهيًا','النقص كأن ينسى واجبًا كالتشهد الأول','الشك كأن لا يدري أصلى ثلاثًا أم أربعًا','موضع السجود قبل السلام وبعده','من نسي سنة فلا يلزمه سجود'],notes:['سجود السهو سجدتان يجبر بهما المصلي ما وقع في صلاته من خلل سهوًا','أسبابه ثلاثة: الزيادة، والنقص، والشك','في الشك: إن غلب على ظنه أحد العددين بنى عليه، وإلا بنى على الأقل، ثم يسجد سجدتين','قال الشيخ ابن باز: لو سجد قبل السلام أو بعده صح ولا حرج','ترك السنة سهوًا لا يلزمه به سجود'],src:'موضع السجود كما بيّنه الشيخ ابن عثيمين في «رسالة في سجود السهو»، وقول الشيخ ابن باز من فتاواه.'},
+  items:['الزيادة كأن يزيد ركوعًا أو سجودًا أو ركعة ساهيًا','النقص كأن ينسى واجبًا كالتشهد الأول','الشك كأن لا يدري أصلى ثلاثًا أم أربعًا','موضع السجود قبل السلام وبعده','من نسي سنة فلا يلزمه سجود'],notes:['سجود السهو سجدتان يجبر بهما المصلي ما وقع في صلاته من خلل سهوًا','أسبابه ثلاثة: الزيادة، والنقص، والشك','إذا شك في عدد الركعات: فإن ترجّح عنده أحد الأمرين عمل به وسجد للسهو بعد السلام، وإن لم يترجّح بنى على الأقل وسجد قبل السلام','من نسي التشهد الأول فقام: إن تذكّر قبل أن يستتم قائمًا رجع فجلس، وإن استتم قائمًا مضى ولم يرجع وسجد للسهو قبل السلام','قال الشيخ ابن باز: لو سجد قبل السلام أو بعده صح ولا حرج','ترك السنة سهوًا لا يلزمه به سجود'],src:'موضع السجود كما بيّنه الشيخ ابن عثيمين في «رسالة في سجود السهو»، وقول الشيخ ابن باز من فتاواه.'},
  {id:'mubtilat',n:6,title:'مبطلات الصلاة',count:'ثمانية مبطلات',accent:'#B8323F',ready:true,fast:'ep6.mp4',edu:'ep6-edu.mp4',poster:'ep6.jpg',
   items:['الكلام عمدًا','الضحك','الأكل','الشرب','انكشاف العورة','الانحراف الكثير عن جهة القبلة','العبث الكثير المتوالي','انتقاض الطهارة'],notes:['الصلاة تسبيح وتكبير وقراءة قرآن، ولا يصلح فيها شيء من كلام الناس','الكلام عمدًا يبطلها، أما الناسي والجاهل فلا تبطل صلاته','الضحك يبطلها، أما التبسم فلا','المبطل من الانحراف عن القبلة الكثير، ومن العبث الكثير المتوالي'],src:'كما عدّها الشيخ ابن باز في «الدروس المهمة لعامة الأمة»، وحكم التبسم من فتاواه.'},
- {id:'akhta',n:7,title:'أخطاء تقع في الصلاة',count:'أحد عشر خطأً',accent:'#C27C0E',ready:true,edu:'ep7-edu.mp4',poster:'ep7.jpg',
+ {id:'akhta',n:7,title:'أخطاء تقع في الصلاة',count:'أحد عشر خطأً',accent:'#C27C0E',btn:'#A1670C',ready:true,edu:'ep7-edu.mp4',poster:'ep7.jpg',
   items:['لا تصلِّ بحضرة طعام تشتهيه ولا وأنت تحبس البول أو الغائط','سوِّ صفك فتسوية الصفوف من إقامة الصلاة','النية محلها القلب والتلفظ بها بدعة كما قال الشيخ ابن باز','لا ترفع بصرك إلى السماء في صلاتك','لا تلتفت لغير حاجة فالالتفات اختلاس من الشيطان','لا تضع يدك على خاصرتك في الصلاة','اكظم التثاؤب ما استطعت','اطمئن في ركوعك وسجودك فالطمأنينة ركن','لا تسبق إمامك','ارفع ذراعيك عن الأرض في السجود','لا تكفّ ثوبك عند السجود'],notes:['الالتفات لغير حاجة اختلاس يختلسه الشيطان من صلاة العبد','النية محلها القلب ولا يُتلفظ بها','الطمأنينة في الركوع والسجود ركن لا تصح الصلاة بدونه','أُمر النبي ﷺ أن يسجد على سبعة أعضاء: الجبهة واليدين والركبتين وأطراف القدمين'],src:'الأحاديث من صحيحي البخاري ومسلم، وحكم التلفظ بالنية من مجموع فتاوى الشيخ ابن باز.'},
  {id:'imam',n:8,title:'الإمام والمأموم',count:'أربع أحوال وثلاثة أحكام',accent:'#A23A72',ready:true,edu:'ep8-edu.mp4',poster:'ep8.jpg',
-  items:['المسابقة: أن تسبق إمامك، وهي محرمة','الموافقة: أن تفعل معه في اللحظة نفسها، وهي مكروهة','التخلف: أن تتأخر عنه بلا عذر، وهو خلاف السنة','المتابعة: أن تنتقل بعده مباشرة، وهي السنة','إذا كنت وحدك مع الإمام فقف عن يمينه محاذيًا له','ادخل مع الإمام على أي حال وجدته، ومن أدرك الركوع أدرك الركعة','على الإمام أن يخفف مع إتمام الصلاة'],notes:['المتابعة هي السنة: تنتقل بعد إمامك مباشرة إذا وصل إلى الركن وانقطع صوته','المسابقة محرمة، والموافقة في الأفعال مكروهة، ومن كبّر للإحرام قبل أن يتم الإمام تكبيره لم تنعقد صلاته','إذا كنت وحدك مع الإمام فقف عن يمينه محاذيًا له','من كبّر للإحرام ثم ركع والإمام راكع أدرك الركعة، ثم يتم ما فاته بعد سلام إمامه'],src:'الأحاديث من صحيحي البخاري ومسلم، وأحوال المأموم من الشرح الممتع للشيخ ابن عثيمين، وبقية الأحكام من فتاوى الشيخ ابن باز.'},
+  items:['المسابقة: أن تسبق إمامك، وهي محرمة','الموافقة: أن تفعل معه في اللحظة نفسها، وهي مكروهة','التخلف: أن تتأخر عنه بلا عذر، وهو خلاف السنة','المتابعة: أن تنتقل بعده مباشرة، وهي السنة','إذا كنت رجلًا وحدك مع الإمام فقف عن يمينه محاذيًا له','ادخل مع الإمام على أي حال وجدته، ومن أدرك الركوع أدرك الركعة','على الإمام أن يخفف مع إتمام الصلاة'],notes:['المتابعة هي السنة: تنتقل بعد إمامك مباشرة إذا وصل إلى الركن وانقطع صوته','المسابقة محرمة، والموافقة في الأفعال مكروهة، ومن كبّر للإحرام قبل أن يتم الإمام تكبيره لم تنعقد صلاته','وإن خرجت في نزهة أو رحلة وصلّيت بأهلك جماعة فتذكّر: الرجل يقف عن يمين الإمام محاذيًا له، والمرأة من محارمه تقف خلفه','من كبّر للإحرام ثم ركع والإمام راكع أدرك الركعة، ثم يتم ما فاته بعد سلام إمامه'],src:'الأحاديث من صحيحي البخاري ومسلم، وأحوال المأموم من الشرح الممتع للشيخ ابن عثيمين، وبقية الأحكام من فتاوى الشيخ ابن باز.'},
  {id:'safar',n:9,title:'صلاة المسافر',ready:false},
 ];
 
@@ -292,7 +311,7 @@ const QUIZ={
   {q:'ما معنى أن الشيء شرط للصلاة؟',o:['لا تصح الصلاة إلا به','سنة يُثاب فاعلها','يجبره سجود السهو'],x:'الشروط هي التي لا تصح الصلاة إلا بها.'},
   {q:'متى نتأكد من الشروط؟',o:['قبل التكبير ونحافظ عليها حتى التسليم','بعد السلام','عند الركوع فقط'],x:'تأكد منها قبل أن تكبّر، وحافظ عليها حتى تسلّم.'},
   {q:'أيّها من شروط الصلاة؟',o:['استقبال القبلة','الطمأنينة','التشهد الأول'],x:'استقبال القبلة شرط، أما الطمأنينة فركن، والتشهد الأول واجب.'},
-  {q:'بماذا يكون رفع الحدث؟',o:['بالوضوء أو الغسل','بغسل الثوب','بالسواك'],x:'يُرفع الحدث الأصغر بالوضوء، والأكبر بالغسل.'},
+  {q:'بماذا يكون رفع الحدث؟',o:['بالوضوء أو الغسل','بغسل الثوب','بالسواك'],x:'يُرفع الحدث الأصغر بالوضوء، والأكبر بالغسل، ويقوم التيمم مقامهما عند فقد الماء أو العجز عن استعماله.'},
   {q:'من أين تكون إزالة النجاسة؟',o:['من البدن والثوب والمكان','من البدن فقط','من المكان فقط'],x:'تُزال النجاسة من البدن والثوب والمكان الذي يصلي فيه.'},
   {q:'أين محل النية؟',o:['القلب','اللسان','لا محل لها'],x:'النية محلها القلب.'},
   {q:'ماذا فعل أهل قباء لما جاءهم الخبر وهم في صلاة الصبح؟',o:['استداروا إلى الكعبة وهم في صلاتهم','قطعوا الصلاة وأعادوها','أكملوا إلى جهتهم الأولى'],x:'استداروا إلى الكعبة وهم في صلاتهم، والقصة في صحيح البخاري.'},
@@ -302,7 +321,7 @@ const QUIZ={
   {q:'كم أركان الصلاة؟',o:['أربعة عشر','تسعة','ثمانية','اثنا عشر'],x:'عدّها الشيخ ابن باز أربعة عشر ركنًا في «الدروس المهمة».'},
   {q:'ما أول الأركان؟',o:['القيام مع القدرة','النية','دعاء الاستفتاح'],x:'أولها القيام مع القدرة. أما النية فشرط، ودعاء الاستفتاح سنة.'},
   {q:'ما حكم تكبيرة الإحرام؟',o:['ركن','واجب','سنة'],x:'تكبيرة الإحرام ركن، وبقية التكبيرات واجبات.'},
-  {q:'متى يكون القيام ركنًا؟',o:['مع القدرة','مطلقًا','في النافلة فقط'],x:'القيام ركن على من قدر عليه، ومن عجز صلى على حسب استطاعته.'},
+  {q:'متى يكون القيام ركنًا؟',o:['في الفريضة مع القدرة','في كل صلاة ولو مع العجز','في النافلة فقط'],x:'القيام ركن في الفريضة على من قدر عليه، ومن عجز صلى على حسب استطاعته.'},
   {q:'على كم عضوًا يكون السجود؟',o:['سبعة','خمسة','ستة'],x:'الجبهة مع الأنف، واليدان، والركبتان، وأطراف القدمين. والحديث متفق عليه.'},
   {q:'في أي شيء تكون الطمأنينة ركنًا؟',o:['في جميع الأفعال','في الركوع فقط','في السجود فقط'],x:'الطمأنينة ركن في جميع أفعال الصلاة.'},
   {q:'ما الذي يأتي بعد الركوع مباشرة؟',o:['الاعتدال بعد الركوع','السجود','الجلسة بين السجدتين'],x:'بعد الركوع يعتدل قائمًا، ثم يسجد.'},
@@ -330,15 +349,15 @@ const QUIZ={
   {q:'ما المجافاة في السجود؟',o:['إبعاد العضدين عن الجنبين والبطن عن الفخذين والفخذين عن الساقين','ضم المرفقين إلى الجنبين','مد الذراعين على الأرض'],x:'يجافي عضديه عن جنبيه، وبطنه عن فخذيه، وفخذيه عن ساقيه.'},
   {q:'أين يكون الافتراش؟',o:['في التشهد الأول وبين السجدتين','في التشهد الأخير من الرباعية','في القيام'],x:'يفترش في التشهد الأول وبين السجدتين.'},
   {q:'أين يكون التورك؟',o:['في التشهد الأخير من الثلاثية والرباعية','في التشهد الأول','في تشهد صلاة الفجر'],x:'التورك في التشهد الأخير من الثلاثية والرباعية، أما الفجر ففيها افتراش.'},
-  {q:'متى يُسن الجهر بالقراءة؟',o:['في الصلاة الجهرية','في كل الصلوات','في الصلاة السرية'],x:'يجهر بالقراءة في الصلاة الجهرية، ويسر بها في السرية.'}],
+  {q:'في أي الصلوات المفروضة يجهر الإمام بالقراءة؟',o:['في الفجر والجمعة والركعتين الأوليين من المغرب والعشاء','في جميع الصلوات المفروضة','في الظهر والعصر','في الركعة الأخيرة من كل صلاة'],x:'يجهر الإمام في الفجر والجمعة والركعتين الأوليين من المغرب والعشاء، ويُسر فيما سوى ذلك.'}],
  sahw:[
   {q:'ماذا فعل النبي ﷺ لما نُبِّه أنه صلى الظهر خمسًا؟',o:['سجد سجدتين بعد أن سلّم','أعاد الصلاة كلها','صلى ركعة أخرى','لم يسجد شيئًا'],x:'سجد سجدتين بعد أن سلّم، والقصة في صحيح البخاري.'},
   {q:'ما سجود السهو؟',o:['سجدتان يجبر بهما المصلي ما وقع في صلاته من خلل سهوًا','سجدة واحدة بعد كل صلاة','ركعتان تُصليان بعد الصلاة','سجدتان شكرًا لله'],x:'سجود السهو سجدتان لا سجدة واحدة، يجبر بهما المصلي ما وقع في صلاته من خلل سهوًا.'},
   {q:'كم أسباب سجود السهو؟',o:['ثلاثة','اثنان','أربعة','خمسة'],x:'أسبابه ثلاثة: الزيادة والنقص والشك.'},
   {q:'أيّ هذه من صور الزيادة؟',o:['أن يزيد ركعة ساهيًا','أن ينسى التشهد الأول','أن يشك أصلى ثلاثًا أم أربعًا','أن ينسى رفع اليدين'],x:'زيادة ركعة ساهيًا من الزيادة، ونسيان التشهد الأول من النقص، والتردد في العدد من الشك.'},
-  {q:'من نسي التشهد الأول وقام، فما عليه؟',o:['يسجد سجدتين','تبطل صلاته','لا شيء عليه','يتشهد مرتين في آخر صلاته ولا يسجد'],x:'يسجد سجدتين كما فعل النبي ﷺ حين قام من الركعتين ولم يجلس، فسجد قبل أن يسلّم.'},
-  {q:'من شك فغلب على ظنه أحد العددين، فماذا يفعل؟',o:['يبني على ما غلب على ظنه','يعيد الصلاة','يسلّم ولا يسجد','يترك ما شك فيه ولا يكمل'],x:'إن غلب على ظنه أحدهما بنى عليه، ثم يسجد سجدتين.'},
-  {q:'من شك ولم يترجح عنده شيء، فماذا يفعل؟',o:['يبني على الأقل ويكمل ثم يسجد سجدتين','يبني على الأكثر','يعيد الصلاة','يسلّم ولا يسجد'],x:'يبني على الأقل لأنه المتيقن، ويكمل صلاته، ثم يسجد سجدتين.'},
+  {q:'إمام نسي التشهد الأول واستتم قائمًا، فماذا يفعل؟',o:['يمضي ولا يرجع، ويسجد للسهو قبل السلام','يرجع فيجلس للتشهد','يعيد الصلاة','يمضي ولا شيء عليه'],x:'«إذا قام الإمام في الركعتين، فإن ذكر قبل أن يستوي قائما فليجلس، فإن استوى قائما فلا يجلس، ويسجد سجدتي السهو» رواه أبو داود.'},
+  {q:'من شك فغلب على ظنه أحد العددين، فماذا يفعل؟',o:['يبني على ما غلب على ظنه','يعيد الصلاة','يسلّم ولا يسجد','يترك ما شك فيه ولا يكمل'],x:'إن غلب على ظنه أحدهما بنى عليه، ثم يسجد سجدتين بعد السلام.'},
+  {q:'من شك ولم يترجح عنده شيء، فماذا يفعل؟',o:['يبني على الأقل ويكمل ثم يسجد سجدتين','يبني على الأكثر','يعيد الصلاة','يسلّم ولا يسجد'],x:'يبني على الأقل لأنه المتيقن، ويكمل صلاته، ثم يسجد سجدتين قبل السلام.'},
   {q:'أين موضع سجود السهو في الزيادة كما بيّنه الشيخ ابن عثيمين؟',o:['بعد السلام','قبل السلام','في التشهد الأول','لا سجود فيها'],x:'بيّن الشيخ ابن عثيمين أنه بعد السلام في الزيادة، وقبله في النقص.'},
   {q:'ماذا قال الشيخ ابن باز فيمن سجد للسهو قبل السلام أو بعده؟',o:['صح ولا حرج','لا يصح إلا قبل السلام','لا يصح إلا بعد السلام','بطلت صلاته'],x:'قال الشيخ ابن باز: لو سجد قبل السلام أو بعده صح ولا حرج.'},
   {q:'من نسي سنة كرفع اليدين، فما عليه؟',o:['لا يلزمه سجود','يلزمه سجدتان','تبطل صلاته','يعيد الركعة'],x:'ترك السنة سهوًا لا يلزمه به سجود.'}],
@@ -357,7 +376,7 @@ const QUIZ={
   {q:'ما الذي وصفه النبي ﷺ بأنه اختلاس يختلسه الشيطان من صلاة العبد؟',o:['الالتفات في الصلاة','رفع البصر','التثاؤب','وضع اليد على الخاصرة'],x:'سألت عائشة رضي الله عنها النبي ﷺ عن الالتفات في الصلاة فقال: «هو اختلاس يختلسه الشيطان من صلاة العبد» رواه البخاري.'},
   {q:'ما حكم التلفظ بالنية عند الشيخ ابن باز؟',o:['بدعة، والنية محلها القلب','واجب لا تصح الصلاة بدونه','شرط من شروط الصلاة','ركن من أركانها'],x:'قال الشيخ ابن باز: «التلفظ بالنية بدعة» (مجموع فتاواه).'},
   {q:'ماذا قال النبي ﷺ فيمن يرفعون أبصارهم إلى السماء في صلاتهم؟',o:['لينتهن عن ذلك أو لتخطفن أبصارهم','لا بأس إن كان خاشعًا','يعيد صلاته','يسجد للسهو'],x:'اشتد قوله ﷺ في ذلك حتى قال: «لينتهن عن ذلك أو لتخطفن أبصارهم» رواه البخاري.'},
-  {q:'ما الذي نهى عنه النبي ﷺ بقوله «أن يصلي الرجل مختصرا»؟',o:['أن يضع يده على خاصرته','أن يصلي جالسًا','أن يصلي في ثوب واحد','أن يصلي وحده'],x:'«نهى النبي ﷺ أن يصلي الرجل مختصرا» رواه البخاري، أي واضعًا يده على خاصرته.'},
+  {q:'ما معنى الاختصار في الصلاة الذي نهى عنه النبي ﷺ؟',o:['أن يضع يده على خاصرته','أن يصلي جالسًا','أن يصلي في ثوب واحد','أن يصلي وحده'],x:'قال أبو هريرة رضي الله عنه: «نهى النبي صلى الله عليه وسلم أن يصلي الرجل مختصرا» رواه البخاري، أي واضعًا يده على خاصرته.'},
   {q:'ماذا يفعل المصلي إذا تثاءب؟',o:['يكظم ما استطاع','يرفع صوته','يقطع صلاته','يلتفت'],x:'«إذا تثاءب أحدكم في الصلاة فليكظم ما استطاع فإن الشيطان يدخل» رواه مسلم.'},
   {q:'الطمأنينة في الركوع والسجود:',o:['ركن لا تصح الصلاة بدونه','لا تلزم إلا في الجمعة','خاصة بالإمام','تكفي في الركعة الأولى'],x:'الطمأنينة ركن في كل ركوع وسجود، ولا تصح الصلاة بدونها.'},
   {q:'ماذا توعّد النبي ﷺ من يرفع رأسه قبل الإمام؟',o:['أن يجعل الله رأسه رأس حمار','أن يُطرد من الصف','أن يُكتب من الغافلين','لا شيء عليه'],x:'توعّد النبي ﷺ من يرفع رأسه قبل الإمام أن يجعل الله رأسه رأس حمار، رواه البخاري.'},
@@ -373,7 +392,7 @@ const QUIZ={
   {q:'ما حكم التأخر عن الإمام بلا عذر؟',o:['خلاف السنة، وقد تبطل به الصلاة إذا تأخر بركن كامل','مستحب لزيادة الطمأنينة','لا حرج فيه مهما طال'],x:'القول الراجح عند الشيخ ابن عثيمين أن من تخلف عن إمامه بركن لغير عذر بطلت صلاته.'},
   {q:'متى تنتقل خلف إمامك؟',o:['إذا وصل إلى الركن وانقطع صوته','قبل أن يبدأ الإمام بالانتقال','بعد أن يرفع الإمام من الركن'],x:'لا تنتقل حتى يصل الإمام إلى الركن وينقطع صوته، ثم تتابعه مباشرة.'},
   {q:'ما الوعيد لمن يرفع رأسه قبل الإمام؟',o:['أن يحول الله رأسه رأس حمار','أن يُحرم أجر الجماعة','لا وعيد فيه'],x:'«أما يخشى الذي يرفع رأسه قبل الإمام أن يحول الله رأسه رأس حمار» رواه مسلم.'},
-  {q:'إذا كنت وحدك مع الإمام فأين تقف؟',o:['عن يمينه محاذيًا له','عن يساره','خلفه وحدك'],x:'قاله الشيخ ابن باز، ودليله في صحيح البخاري.'},
+  {q:'خرج رجل في نزهة مع ابنه وزوجته وحضرت الصلاة، فأين يقفان إذا صلّى بهما؟',o:['الابن عن يمينه محاذيًا له، والزوجة خلفهما','الابن والزوجة كلاهما عن يمينه','الزوجة عن يمينه والابن خلفه'],x:'الرجل الواحد يقف عن يمين الإمام، والمرأة تقف خلف الرجال، ففي حديث أنس رضي الله عنه: «وصففت واليتيم وراءه، والعجوز من ورائنا» رواه البخاري.'},
   {q:'بماذا تُدرك الركعة كما قرره الشيخ ابن باز؟',o:['أن تكبّر للإحرام ثم تركع والإمام راكع','أن تدرك السجود مع الإمام','أن تدرك التشهد مع الإمام'],x:'من كبّر للإحرام ثم ركع قبل أن يرفع الإمام أدرك الركعة، ثم يتم ما فاته بعد سلام إمامه.'},
   {q:'لماذا أُمر الإمام بالتخفيف؟',o:['لأن في الناس الضعيف والسقيم والكبير','لأن الصلاة الطويلة لا تصح','لأن الإمام لا يجوز له أن يطيل أبدًا'],x:'«إذا صلى أحدكم للناس فليخفف فإن منهم الضعيف والسقيم والكبير» رواه البخاري.'}],
 };
@@ -382,7 +401,7 @@ const ORDW=['الأولى','الثانية','الثالثة','الرابعة','�
 const ready=EPS.filter(e=>e.ready);
 const $=id=>document.getElementById(id);
 const vid=$('vid');
-let cur=ready[0];
+let cur=ready[0], routed=null, ovPushed=false, ovFrom=null;
 
 // arcade picture
 function drawArcade(){
@@ -393,7 +412,7 @@ function drawArcade(){
  EPS.forEach((e,k)=>{
   const x=W-(k+1)*aw, cx=x+aw/2, top=70, bot=286, isCur=cur&&e.id===cur.id;
   const path=`M${x+16} ${bot} L${x+16} ${top+60} Q${cx} ${top-18} ${x+aw-16} ${top+60} L${x+aw-16} ${bot} Z`;
-  s+=`<g class="${e.ready?'archbtn':''}" ${e.ready?`tabindex="0" role="button" data-id="${e.id}" aria-label="الحلقة ${ORDW[e.n-1]} ${e.title}"`:''}>`;
+  s+=`<g class="${e.ready?'archbtn':''}" ${e.ready?`style="--ac:${e.accent}" tabindex="0" role="button" data-id="${e.id}" aria-label="الحلقة ${ORDW[e.n-1]} ${e.title}"`:''}>`;
   s+=`<path class="face" d="${path}" fill="var(--arch)" stroke="${e.ready?e.accent:'var(--line)'}" stroke-width="${isCur?7:3}"/>`;
   if(e.ready)s+=`<ellipse class="lit" cx="${cx}" cy="${top+110}" rx="${aw*.42}" ry="80" fill="url(#g${e.n})"/>`;
   s+=`<line x1="${cx}" y1="${top+18}" x2="${cx}" y2="${top+58}" stroke="var(--soft)" stroke-width="2"/>`;
@@ -413,7 +432,7 @@ function drawArcade(){
 function drawList(){
  $('eps').innerHTML=EPS.map(e=>e.ready
   ?`<button class="ep" type="button" data-id="${e.id}" ${cur.id===e.id?'aria-current="true"':''} style="--accent2:${e.accent}" aria-label="الحلقة ${ORDW[e.n-1]} ${e.title}"><img src="${e.poster}" alt=""><b>${e.title}</b></button>`
-  :`<div class="ep soon"><span class="dot">${NUM[e.n-1]}</span><b>${e.title}</b></div>`).join('');
+  :`<div class="ep soon"><span class="dot">${NUM[e.n-1]}</span><b>${e.title}</b><small class="soontag">قريبًا</small></div>`).join('');
  $('eps').querySelectorAll('button.ep').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id,true)));
  $('chips').innerHTML=ready.map(e=>`<span class="c" style="--cc:${e.accent}">${e.title.replace(' الصلاة','')}</span>`).join('<i>←</i>');
 }
@@ -424,6 +443,7 @@ function setSrc(autoplay){
 function select(id,autoplay){
  const e=ready.find(x=>x.id===id)||ready[0]; cur=e;
  document.documentElement.style.setProperty('--accent',e.accent);
+ document.documentElement.style.setProperty('--btn',e.btn||e.accent);
  $('screen').style.setProperty('--accent',e.accent);
  $('epno').textContent='الحلقة '+ORDW[e.n-1]+' · '+e.count;
  $('eptitle').textContent=e.title;
@@ -431,7 +451,8 @@ function select(id,autoplay){
  $('quizbtn').style.display=QUIZ[e.id]?'':'none';$('revbtn').style.display=$('endrev').style.display=e.notes?'':'none';$('endquiz').style.display=QUIZ[e.id]?'':'none';
  const i=ready.indexOf(e);$('prev').disabled=i===0;$('next').disabled=i===ready.length-1;
  setSrc(autoplay);drawArcade();drawList();
- if(location.hash!=='#'+e.id){try{history.replaceState(null,'','#'+e.id);}catch(_){location.hash=e.id;}}
+ if(location.hash!=='#'+e.id){const push=autoplay&&!$('qz').classList.contains('on')&&!$('rv').classList.contains('on');try{if(push)history.pushState(null,'','#'+e.id);else history.replaceState(null,'','#'+e.id);}catch(_){location.hash=e.id;}}
+ routed=location.hash;
  if(autoplay)$('watch').scrollIntoView({behavior:'smooth',block:'start'});
 }
 const BASE='https://hameed9507.github.io/arihna/';
@@ -444,7 +465,7 @@ function doShare(text){
  if(canShare){navigator.share({text}).catch(()=>{});}
  else window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');
 }
-function flash(btn,txt){const sp=btn.querySelector('span'),old=sp.textContent;btn.classList.add('done');sp.textContent=txt;setTimeout(()=>{btn.classList.remove('done');sp.textContent=old;},2000);}
+function flash(btn,txt){const sp=btn.querySelector('span'),old=sp.textContent,ic=btn.querySelector('svg'),oi=ic?ic.innerHTML:'';btn.classList.add('done');sp.textContent=txt;if(ic)ic.innerHTML='<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';setTimeout(()=>{btn.classList.remove('done');sp.textContent=old;if(ic)ic.innerHTML=oi;},2000);}
 function copyText(t,btn){
  const ok=()=>flash(btn,'تم النسخ');
  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,()=>legacy());else legacy();
@@ -464,9 +485,33 @@ vid.addEventListener('ended',()=>{
 });
 $('endnext').addEventListener('click',()=>{const i=ready.indexOf(cur);if(ready[i+1])select(ready[i+1].id,true);});
 $('replay').addEventListener('click',()=>{$('endcard').classList.remove('on');vid.currentTime=0;const p=vid.play();if(p&&p.catch)p.catch(()=>{});});
-window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id.endsWith('-quiz')){openQuiz(id.slice(0,-5));return;}if(id.endsWith('-review')){openReview(id.slice(0,-7));return;}if(id&&id!==cur.id&&ready.some(e=>e.id===id))select(id,false);});
+function route(){
+ if(location.hash===routed)return; routed=location.hash;
+ const id=location.hash.slice(1);
+ if(id.endsWith('-quiz')){openQuiz(id.slice(0,-5));return;}
+ if(id.endsWith('-review')){openReview(id.slice(0,-7));return;}
+ ovPushed=false;
+ if($('qz').classList.contains('on'))hideQuiz();
+ if($('rv').classList.contains('on'))hideReview();
+ if(id&&id!==cur.id&&ready.some(e=>e.id===id))select(id,false);
+}
+window.addEventListener('hashchange',route);window.addEventListener('popstate',route);
+function ovEnter(tag){
+ if(location.hash==='#'+tag)return;
+ try{if(ovPushed)history.replaceState(null,'','#'+tag);else{history.pushState(null,'','#'+tag);ovPushed=true;ovFrom=cur.id;}}catch(_){}
+ routed=location.hash;
+}
+function ovLeave(){
+ if(ovPushed&&ovFrom===cur.id){ovPushed=false;history.back();return;}
+ ovPushed=false;
+ try{history.replaceState(null,'','#'+cur.id);}catch(_){}
+ routed=location.hash;
+}
+document.addEventListener('touchstart',()=>{},{passive:true});
+$('pickbtn').addEventListener('click',()=>$('list').scrollIntoView({behavior:'smooth',block:'start'}));
 const H0=(location.hash||'').slice(1);
 select(H0.replace(/-(quiz|review)$/,''),false);
+if(H0&&ready.some(e=>e.id===H0))setTimeout(()=>$('watch').scrollIntoView({block:'start'}),0);
 
 // ===== الاختبار =====
 const AD=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
@@ -499,14 +544,14 @@ function openQuiz(id){
  $('qz').style.setProperty('--qa',e.accent);
  $('qtitle').textContent='اختبار '+e.title;
  $('qz').classList.add('on'); document.body.style.overflow='hidden';
- try{history.replaceState(null,'','#'+e.id+'-quiz');}catch(_){}
+ ovEnter(e.id+'-quiz');
  renderQ();
 }
-function closeQuiz(){
+function hideQuiz(){
  $('qz').classList.remove('on'); document.body.style.overflow='';
- try{history.replaceState(null,'','#'+cur.id);}catch(_){}
  if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
+function closeQuiz(){hideQuiz();ovLeave();}
 function renderQ(){
  const q=QS.qs[QS.i]; dots();
  $('qbody').innerHTML=`<div class="qcard"><div class="qnum">السؤال ${AD(QS.i+1)} من ${AD(QS.qs.length)}</div><h4>${fmt(q.q)}</h4><div class="opts">${q.ord.map((k,j)=>`<button class="opt" type="button" style="--i:${j}" data-k="${k}"><span class="mk">${LET[j]}</span><span>${fmt(q.o[k])}</span></button>`).join('')}</div><div id="qx"></div><div class="qfoot" id="qfoot"></div></div>`;
@@ -537,14 +582,24 @@ function result(){
   :s>=7?['أحسنت','راجع الأسئلة التي فاتتك، ثم أعد الاختبار']
   :['بداية طيبة','شاهد الحلقة مرة أخرى، ثم أعد الاختبار'];
  const i=ready.indexOf(QS.e), nx=ready[i+1];
- $('qbody').innerHTML=`<div class="qres"><div class="ring"><svg viewBox="0 0 180 180"><circle class="bgc" cx="90" cy="90" r="78"/><circle class="fg" id="qring" cx="90" cy="90" r="78" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="sc"><span id="qcount">${AD(0)}</span><small>من ${AD(n)}</small></div></div><h4>${msg[0]}</h4><p>${msg[1]}</p><div class="nav"><button class="btn" type="button" id="qagain">أعد الاختبار</button><button class="btn ghost" type="button" id="qwatch">شاهد الحلقة</button>${nx&&QUIZ[nx.id]?`<button class="btn ghost" type="button" id="qnx">اختبار ${nx.title}</button>`:''}</div></div>`;
+ $('qbody').innerHTML=`<div class="qres"><div class="ring"><svg viewBox="0 0 180 180"><circle class="bgc" cx="90" cy="90" r="78"/><circle class="fg" id="qring" cx="90" cy="90" r="78" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="sc"><span id="qcount">${AD(0)}</span><small>من ${AD(n)}</small></div></div><h4>${msg[0]}</h4><p>${msg[1]}</p><div class="nav">${s<n?'<button class="btn" type="button" id="qmiss">راجع أخطاءك</button>':''}<button class="btn${s<n?' ghost':''}" type="button" id="qagain">أعد الاختبار</button><button class="btn ghost" type="button" id="qwatch">شاهد الحلقة</button>${nx&&QUIZ[nx.id]?`<button class="btn ghost" type="button" id="qnx">اختبار ${nx.title}</button>`:''}</div></div>`;
  requestAnimationFrame(()=>requestAnimationFrame(()=>{$('qring').style.strokeDashoffset=C*(1-s/n);}));
  const t0=performance.now(), dur=1300;
  (function tick(t){const p=Math.min(1,(t-t0)/dur);$('qcount').textContent=AD(Math.round(s*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(tick);else if(s===n)burst($('qring'),true);})(t0);
  $('qagain').addEventListener('click',()=>openQuiz(QS.e.id));
- $('qwatch').addEventListener('click',()=>{closeQuiz();select(QS.e.id,true);});
+ $('qwatch').addEventListener('click',watchAgain);
+ if($('qmiss'))$('qmiss').addEventListener('click',showMisses);
  if($('qnx'))$('qnx').addEventListener('click',()=>openQuiz(nx.id));
  setTimeout(()=>$('qagain').focus({preventScroll:true}),100);
+}
+function watchAgain(){closeQuiz();$('endcard').classList.remove('on');vid.currentTime=0;const p=vid.play();if(p&&p.catch)p.catch(()=>{});$('watch').scrollIntoView({behavior:'smooth',block:'start'});}
+function showMisses(){
+ const miss=QS.qs.filter((q,k)=>!QS.res[k]);
+ $('qbody').innerHTML=`<div class="qmiss"><h4>الأسئلة التي فاتتك</h4>${miss.map(q=>`<div class="mi"><b>${fmt(q.q)}</b><p class="ma">الصواب: ${fmt(q.o[0])}</p><p>${fmt(q.x)}</p></div>`).join('')}<div class="nav"><button class="btn" type="button" id="qagain2">أعد الاختبار</button><button class="btn ghost" type="button" id="qwatch2">شاهد الحلقة</button></div></div>`;
+ $('qbox').scrollTop=0;
+ $('qagain2').addEventListener('click',()=>openQuiz(QS.e.id));
+ $('qwatch2').addEventListener('click',watchAgain);
+ $('qbox').focus({preventScroll:true});
 }
 $('quizbtn').addEventListener('click',()=>openQuiz(cur.id));
 $('endquiz').addEventListener('click',()=>openQuiz(cur.id));
@@ -563,14 +618,15 @@ function openReview(id){
  $('rvtitle').textContent=(QUIZ[e.id]?'مراجعة قبل اختبار ':'مراجعة ')+e.title;
  $('rvbody').innerHTML=`<ol class="rvlist">${e.items.map((t,i)=>`<li style="--i:${i}"><span>${NUM[i]}</span>${fmt(t)}</li>`).join('')}</ol><div class="rvnotes"><b>تذكّر</b><ul>${e.notes.map(t=>`<li>${fmt(t)}</li>`).join('')}</ul></div>${QUIZ[e.id]?`<p class="rvgo"><button class="btn" type="button" id="rvgo">ابدأ الاختبار</button></p>`:''}`;
  $('rv').classList.add('on'); document.body.style.overflow='hidden'; $('rvbox').scrollTop=0;
- try{history.replaceState(null,'','#'+e.id+'-review');}catch(_){}
+ ovEnter(e.id+'-review');
  if($('rvgo'))$('rvgo').addEventListener('click',()=>{closeReview(true);openQuiz(e.id);});
  setTimeout(()=>$('rvbox').focus({preventScroll:true}),60);
 }
+function hideReview(){$('rv').classList.remove('on'); document.body.style.overflow='';}
 function closeReview(silent){
- $('rv').classList.remove('on'); document.body.style.overflow='';
+ hideReview();
  if(silent)return;
- try{history.replaceState(null,'','#'+cur.id);}catch(_){}
+ ovLeave();
  if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
 $('revbtn').addEventListener('click',()=>openReview(cur.id));
