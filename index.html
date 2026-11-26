@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>أرحنا بها</title>
+<meta name="description" content="سلسلة في أحكام الصلاة: شاهد الحلقة وراجعها واختبر نفسك">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="أرِحنا بها">
+<meta property="og:title" content="«أرِحنا بها» سلسلة في أحكام الصلاة">
+<meta property="og:description" content="شاهد الحلقة وراجعها واختبر نفسك">
+<meta property="og:url" content="https://hameed9507.github.io/arihna/">
+<meta property="og:image" content="https://hameed9507.github.io/arihna/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hameed9507.github.io/arihna/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@500;700;900&display=swap">
 <style>
@@ -187,6 +199,12 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.mk svg path{stroke-dashoffset:0}}
 @keyframes glowp{0%,100%{opacity:.55}50%{opacity:1}}
 .lit{animation:glowp 2.6s ease-in-out infinite}
+.share{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px}
+.sbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 18px;border-radius:40px;font:900 16px Tajawal;cursor:pointer;border:2px solid var(--accent,#C9822B);background:var(--accent,#C9822B);color:#fff}
+.sbtn.ghost{background:var(--card);color:var(--accent,#C9822B)}
+.sbtn svg{width:20px;height:20px;flex:none}
+.sbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.sbtn.done{background:#3E9B5A;border-color:#3E9B5A;color:#fff}
 </style>
 </head>
 <body>
@@ -198,6 +216,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
   <div class="ref">رواه أبو داود</div>
   <div class="arcade" id="arcade" aria-label="حلقات السلسلة"></div>
   <p class="note">اضغط على قوس مضيء لتشاهد الحلقة</p>
+  <div class="share"><button class="sbtn ghost" id="shareall" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3" fill="currentColor"/><circle cx="6" cy="12" r="3" fill="currentColor"/><circle cx="18" cy="19" r="3" fill="currentColor"/><path d="M8.6 10.7l6.8-4M8.6 13.3l6.8 4" stroke="currentColor" stroke-width="2"/></svg><span>شارك السلسلة</span></button></div>
  </div>
 </header>
 
@@ -215,6 +234,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding:30px 16px 40px
     <button class="arrow" id="next" type="button" aria-label="الحلقة التالية"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
    </div>
    <p class="src" id="src"></p>
+   <div class="share"><button class="sbtn" id="shareep" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3" fill="currentColor"/><circle cx="6" cy="12" r="3" fill="currentColor"/><circle cx="18" cy="19" r="3" fill="currentColor"/><path d="M8.6 10.7l6.8-4M8.6 13.3l6.8 4" stroke="currentColor" stroke-width="2"/></svg><span>شارك الحلقة</span></button><button class="sbtn ghost" id="copyep" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-7A2.5 2.5 0 0 0 4 5.5v9A2.5 2.5 0 0 0 6.5 17H8" fill="none" stroke="currentColor" stroke-width="2.2"/></svg><span>نسخ الرابط</span></button></div>
    <div class="steps"><div class="step"><div class="stepchip"><span>٢</span>راجع</div><button class="btn rev" id="revbtn" type="button"><svg class="ricon" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="6" width="38" height="36" rx="7" fill="var(--card)" stroke="currentColor" stroke-width="3"/><circle cx="14" cy="17" r="3.2" fill="currentColor"/><circle cx="14" cy="26" r="3.2" fill="currentColor"/><circle cx="14" cy="35" r="3.2" fill="currentColor" opacity=".55"/><path d="M21 17h15M21 26h12M21 35h9" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".55"/></svg>مراجعة ما قبل الاختبار</button></div><div class="step"><div class="stepchip"><span>٣</span>اختبر</div><button class="btn quiz" id="quizbtn" type="button"><svg class="qicon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="5" width="27" height="37" rx="5" fill="var(--card)" stroke="currentColor" stroke-width="3"/><path d="M13 14h15M13 21h10" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/><path d="M13 31l4.5 4.5 8.5-9.5" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(32 39 28)"><rect x="35" y="11" width="8" height="24" rx="2" fill="currentColor"/><path d="M35 35l4 7 4-7z" fill="currentColor"/><rect x="35" y="11" width="8" height="5" rx="2" fill="currentColor" opacity=".55"/></g></svg>اختبر نفسك · ١٠ أسئلة</button></div></div>
   </div>
  </div>
@@ -358,7 +378,7 @@ const QUIZ={
   {q:'لماذا أُمر الإمام بالتخفيف؟',o:['لأن في الناس الضعيف والسقيم والكبير','لأن الصلاة الطويلة لا تصح','لأن الإمام لا يجوز له أن يطيل أبدًا'],x:'«إذا صلى أحدكم للناس فليخفف فإن منهم الضعيف والسقيم والكبير» رواه البخاري.'}],
 };
 const NUM=['١','٢','٣','٤','٥','٦','٧','٨','٩','١٠','١١','١٢','١٣','١٤','١٥','١٦'];
-const ORDW=['الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة'];
+const ORDW=['الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة','الحادية عشرة','الثانية عشرة'];
 const ready=EPS.filter(e=>e.ready);
 const $=id=>document.getElementById(id);
 const vid=$('vid');
@@ -380,6 +400,7 @@ function drawArcade(){
   s+=`<rect x="${cx-15}" y="${top+58}" width="30" height="40" rx="8" fill="${e.ready?'#FFE7A8':'var(--bg2)'}" stroke="${e.ready?e.accent:'var(--line)'}" stroke-width="4"/>`;
   s+=`<text x="${cx}" y="${top+160}" text-anchor="middle" font-family="Tajawal" font-weight="900" font-size="52" fill="${e.ready?e.accent:'var(--soft)'}">${NUM[e.n-1]}</text>`;
   s+=`<text class="lbl" x="${cx}" y="${top+200}" text-anchor="middle" font-family="Tajawal" font-weight="700" font-size="${e.title.length>12?13:16}" fill="var(--ink)">${e.ready?e.title:'قريبًا'}</text></g>`;
+  if(e===ready[ready.length-1])s+=`<g aria-hidden="true"><rect x="${cx-48}" y="${top-12}" width="96" height="40" rx="20" fill="${e.accent}" stroke="#fff" stroke-width="3"/><text x="${cx}" y="${top+17}" text-anchor="middle" font-family="Tajawal" font-weight="900" font-size="27" fill="#fff">جديد</text></g>`;
   s+=`<rect x="${x-6}" y="54" width="12" height="${bot-54}" fill="var(--stone2)"/>`;
  });
  s+=`<rect x="${W-6}" y="54" width="12" height="232" fill="var(--stone2)"/><rect x="0" y="286" width="${W}" height="18" rx="3" fill="var(--stone2)"/></svg>`;
@@ -413,6 +434,26 @@ function select(id,autoplay){
  if(location.hash!=='#'+e.id){try{history.replaceState(null,'','#'+e.id);}catch(_){location.hash=e.id;}}
  if(autoplay)$('watch').scrollIntoView({behavior:'smooth',block:'start'});
 }
+const BASE='https://hameed9507.github.io/arihna/';
+const HEAD='«أرِحنا بها» سلسلة في أحكام الصلاة';
+const epUrl=e=>BASE+'#'+e.id;
+const epMsg=e=>HEAD+'\nالحلقة '+ORDW[e.n-1]+': '+e.title+'\nشاهد الحلقة وراجعها واختبر نفسك\n'+epUrl(e);
+const allMsg=()=>HEAD+'\nشاهد الحلقات وراجعها واختبر نفسك\n'+BASE;
+const canShare=!!navigator.share;
+function doShare(text){
+ if(canShare){navigator.share({text}).catch(()=>{});}
+ else window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');
+}
+function flash(btn,txt){const sp=btn.querySelector('span'),old=sp.textContent;btn.classList.add('done');sp.textContent=txt;setTimeout(()=>{btn.classList.remove('done');sp.textContent=old;},2000);}
+function copyText(t,btn){
+ const ok=()=>flash(btn,'تم النسخ');
+ if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,()=>legacy());else legacy();
+ function legacy(){const a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(_){}a.remove();}
+}
+if(!canShare){$('shareep').querySelector('span').textContent='شارك عبر واتساب';$('shareall').querySelector('span').textContent='شارك السلسلة عبر واتساب';}
+$('shareep').addEventListener('click',()=>doShare(epMsg(cur)));
+$('copyep').addEventListener('click',e=>copyText(epUrl(cur),e.currentTarget));
+$('shareall').addEventListener('click',()=>doShare(allMsg()));
 $('prev').addEventListener('click',()=>{const i=ready.indexOf(cur);if(i>0)select(ready[i-1].id,true);});
 $('next').addEventListener('click',()=>{const i=ready.indexOf(cur);if(i<ready.length-1)select(ready[i+1].id,true);});
 vid.addEventListener('ended',()=>{
