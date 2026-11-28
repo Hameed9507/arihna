@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Taj;font-weight:900;src:url(fonts/tajawal-arabic-900-normal.woff2)}
+@font-face{font-family:Taj;font-weight:700;src:url(fonts/tajawal-arabic-700-normal.woff2)}
+@font-face{font-family:Kufi;font-weight:900;src:url(fonts/noto-kufi-arabic-arabic-900-normal.woff2)}
+@font-face{font-family:Amiri;font-weight:700;src:url(fonts/amiri-arabic-700-normal.woff2)}
+@font-face{font-family:Amiri;font-weight:400;src:url(fonts/amiri-arabic-400-normal.woff2)}
+html,body{margin:0;background:#000}
+canvas{display:block}
+</style></head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script src="data.js"></script>
+<script>
+const W=1080,H=1920,GY=1500,OFF=1.0;
+const cv=document.getElementById('c'),g=cv.getContext('2d');
+const OL='#7E7A1E',OL2='#A6A23A',OLL='#D9D59A',INK='#3A2414',SUB='#8A6A50',BODY='#4A2814',FAR='#341b0c';
+const ST=DATA.st.map(x=>x+OFF),EN=DATA.en.map(x=>x+OFF),D=DATA.D;
+const VEND=EN[EN.length-1];
+const T0=i=>ST[i];
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const ease=x=>{x=clamp(x,0,1);return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2};
+const eob=x=>{x=clamp(x,0,1);const c1=1.5,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const ORD=['','الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة','الحادية عشرة','الثانية عشرة','الثالثة عشرة','الرابعة عشرة'];
+function rng(s){return function(){s=(s*16807)%2147483647;return s/2147483647}}
+
+// ---------- PAGES ----------
+// line = array of token indices ; page {k:'t'|'d', L:[lines], key:[idx], src, step}
+const P=[];
+function pg(k,L,o={}){P.push(Object.assign({k,L},o))}
+const R=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r};
+// intro (step 0)
+pg('t',[R(0,3),R(4,6),R(7,10)],{step:0,key:[1,2,3]});
+pg('t',[R(11,13),R(14,17),R(18,19)],{step:0,key:[18,19]});
+pg('t',[R(20,22),R(23,24),R(25,27),R(28,30)],{step:0,key:[28,29,30],src:'القصة في صحيح البخاري',srcAt:30});
+pg('t',[R(31,33),R(34,37)],{step:0,key:[31,32,33],big:1});
+// steps
+pg('t',[R(38,39),R(40,41),R(42,44),[45]],{step:1,key:[39,41]});
+pg('t',[R(46,46),R(47,48),[49],R(50,51)],{step:2,key:[47,48,50,51]});
+pg('t',[R(52,53),R(54,55),R(56,57)],{step:2,key:[55,57]});
+pg('t',[R(58,59),R(60,61)],{step:2,key:[60,61]});
+pg('t',[R(62,63),R(64,66),R(67,68)],{step:3,key:[68]});
+pg('t',[R(69,70),R(71,72)],{step:4,key:[70,71]});
+pg('d',[R(73,75),R(76,77),R(78,79),R(80,82)],{step:4,src:'رواه أبو داود',srcAt:82});
+pg('t',[R(83,84),[85],R(86,88),R(89,90)],{step:5,key:[88,90]});
+pg('t',[R(91,92),R(93,94),R(95,96)],{step:5,key:[93,94]});
+pg('t',[R(97,98),R(99,100),R(101,103)],{step:6,key:[97,103]});
+pg('t',[R(104,106),R(107,108),R(109,110)],{step:6,key:[106,109]});
+pg('d',[R(111,113),R(114,116),R(117,119)],{step:6,src:'الواجب مرة والأفضل ثلاثًا كما قرره الشيخ ابن باز',srcAt:119});
+pg('t',[R(120,121),R(122,123),[124]],{step:7,key:[120,121]});
+pg('t',[R(125,127),R(128,129)],{step:7,key:[127,129]});
+pg('d',[R(130,133)],{step:7});
+pg('t',[R(134,135),R(136,137)],{step:7,key:[137]});
+pg('d',[R(138,139),R(140,141)],{step:7,src:'رواه البخاري',srcAt:141});
+pg('t',[R(142,143),R(144,145),[146]],{step:8,key:[142,146]});
+pg('t',[R(147,149),[150],[151],R(152,153)],{step:8,key:[]});
+pg('t',[R(154,155)],{step:8,key:[154]});
+pg('d',[R(156,158),R(159,161),R(162,164)],{step:8,src:'الواجب مرة والأفضل ثلاثًا كما قرره الشيخ ابن باز',srcAt:164});
+pg('t',[R(165,166),[167]],{step:9,key:[165,166]});
+pg('t',[R(168,170),R(171,172),R(173,174),[175]],{step:9,key:[170,174]});
+pg('d',[R(176,177),R(178,179),R(180,181)],{step:9,src:'الواجب مرة والأفضل ثلاثًا كما قرره الشيخ ابن باز',srcAt:181});
+pg('t',[R(182,184),[185],R(186,188)],{step:10,key:[183,184]});
+pg('t',[R(189,190),R(191,192),[193]],{step:11,key:[191,192]});
+pg('t',[R(194,195),R(196,197),R(198,199),R(200,203)],{step:11,key:[200,201,202,203]});
+pg('t',[R(204,206),R(207,209)],{step:12,key:[207,209]});
+pg('t',[R(210,212),R(213,214)],{step:12,key:[213,214]});
+pg('t',[R(215,218),[219],R(220,221)],{step:12,key:[218]});
+pg('t',[R(222,224),R(225,226),R(227,229)],{step:13,key:[226]});
+pg('t',[[230],R(231,233),R(234,237)],{step:13,key:[230]});
+pg('t',[R(238,239),R(240,241)],{step:13,key:[241]});
+pg('d',[R(242,245),R(246,248),R(249,251),R(252,255),R(256,260)],{step:13,src:'رواه مسلم',srcAt:260,small:1});
+pg('t',[R(261,262),R(263,264)],{step:14,key:[264]});
+pg('d',[R(265,268)],{step:14});
+pg('t',[R(269,270)],{step:14,key:[270]});
+pg('d',[R(271,274)],{step:14,src:'رواه الترمذي',srcAt:274});
+pg('t',[R(275,277),R(278,281),[282]],{step:15,key:[276]});
+pg('t',[R(283,284),R(285,286)],{step:15,key:[284]});
+pg('t',[R(287,288),R(289,290),R(291,292),R(293,294)],{step:15,key:[289,290]});
+P.forEach((p,i)=>{p.first=p.L[0][0];p.last=p.L[p.L.length-1].slice(-1)[0];p.t0=ST[p.first]-0.2});
+P.forEach((p,i)=>{p.t1=i<P.length-1?P[i+1].t0:VEND+0.6});
+const STEPSTART=[];for(let s=1;s<=14;s++){STEPSTART[s]=P.find(p=>p.step===s).t0+0.2}
+const CLOSE0=P.find(p=>p.step===15).t0+0.2;
+const QUESTION=T0(31), CARD0=VEND+0.9, TOTAL=CARD0+4.6;
+const disp=i=>{let w=D[i];if(w==='فتتشهد')w='فتتشهّد';return w};
+
+// ---------- FIGURE ----------
+const LEN={tor:165,ua:92,fa:88,th:128,sh:122,neck:50,hr:38};
+const POS={
+ DOWN:{hip:[3,264],tor:90,ht:0,hN:[-4,230],hF:[2,232],eb:1,aN:[0,14],aF:[8,14],kb:-1,fN:180,fF:180,fin:0,pal:-90},
+ CHEST:{hip:[3,264],tor:90,ht:0,hN:[-50,384],hF:[-46,378],eb:1,aN:[0,14],aF:[8,14],kb:-1,fN:180,fF:180,fin:0,pal:150},
+ TAKBIR:{hip:[3,264],tor:90,ht:0,hN:[-44,466],hF:[-36,470],eb:1,aN:[0,14],aF:[8,14],kb:-1,fN:180,fF:180,fin:0,pal:90},
+ RUKU:{hip:[30,263],tor:180,ht:0,hN:null,hF:null,eb:1,aN:[2,14],aF:[10,14],kb:-1,fN:180,fF:180,fin:0,rk:1,pal:-90},
+ SUJUD:{hip:[40,150],tor:202,ht:43,hN:[-90,6],hF:[-84,6],eb:1,arm:0.8,aN:[150,40],aF:[158,40],kb:-1,fN:-95,fF:-95,fin:0,pal:180},
+ JALSA:{hip:[30,68],tor:92,ht:0,hN:[-62,58],hF:[-56,56],eb:1,kN:[-90,24],kF:[-86,18],aN:[30,40],aF:[38,16],kb:-1,fN:-95,fF:0,fin:0,pal:200},
+ TASH:{hip:[30,68],tor:92,ht:0,hN:[-62,58],hF:[-56,56],eb:1,kN:[-90,24],kF:[-86,18],aN:[30,40],aF:[38,16],kb:-1,fN:-95,fF:0,fin:1,pal:200},
+ TAWA:{hip:[40,42],tor:93,ht:0,hN:[-55,50],hF:[-49,48],eb:1,kN:[-90,22],kF:[-84,16],aN:[30,38],aF:[22,12],kb:-1,fN:-92,fF:0,fin:1,tw:1,pal:189},
+ TAWA0:{hip:[40,42],tor:93,ht:0,hN:[-55,50],hF:[-49,48],eb:1,kN:[-90,22],kF:[-84,16],aN:[30,38],aF:[22,12],kb:-1,fN:-92,fF:0,fin:0,tw:1,pal:189},
+};
+function precompute(){for(const k in POS){const p=POS[k];if(!p.kN){p.kN=ik(p.hip,p.aN,LEN.th,LEN.sh,p.kb)[0];p.kF=ik([p.hip[0]+4,p.hip[1]],p.aF,LEN.th,LEN.sh,p.kb)[0]}}}
+function ik(P0,T,a,b,bend){const dx=T[0]-P0[0],dy=T[1]-P0[1];let d=Math.hypot(dx,dy);d=clamp(d,Math.abs(a-b)+1,a+b-0.5);
+ const base=Math.atan2(dy,dx),al=Math.acos(clamp((a*a+d*d-b*b)/(2*a*d),-1,1));const j=[P0[0]+a*Math.cos(base+bend*al),P0[1]+a*Math.sin(base+bend*al)];
+ const ang=Math.atan2(T[1]-j[1],T[0]-j[0]);return [j,[j[0]+b*Math.cos(ang),j[1]+b*Math.sin(ang)]]}
+function mixPose(A,B,t){const o={};for(const k in B){const a=A[k],b=B[k];
+ if(Array.isArray(b)&&Array.isArray(a))o[k]=[lerp(a[0],b[0],t),lerp(a[1],b[1],t)];else if(typeof b==='number'&&typeof a==='number')o[k]=lerp(a,b,t);else o[k]=t<.5?a:b}
+ for(const k in A)if(!(k in o))o[k]=t<.5?A[k]:0;const aa=A.arm||1,bb=B.arm||1;o.arm=lerp(aa,bb,t);if(typeof A.pal==='number'&&typeof B.pal==='number')o.pal=lerp(A.pal,B.pal,t);return o}
+function solve(p){const r=Math.PI/180,h=p.hip,ta=p.tor*r;
+ const neck=[h[0]+LEN.tor*Math.cos(ta),h[1]+LEN.tor*Math.sin(ta)];
+ const sh=[h[0]+(LEN.tor-16)*Math.cos(ta),h[1]+(LEN.tor-16)*Math.sin(ta)];
+ const hc=[neck[0]+LEN.neck*Math.cos(ta+p.ht*r),neck[1]+LEN.neck*Math.sin(ta+p.ht*r)];
+ const LN=[p.kN,p.aN],LF=[p.kF,p.aF];
+ let hN=p.hN,hF=p.hF;const am=p.arm||1;if(!hN){const f=(k,o)=>{const dx=k[0]+o-sh[0],dy=k[1]-sh[1];const d=Math.hypot(dx,dy);const L=Math.min(d,178);return [sh[0]+dx/d*L,sh[1]+dy/d*L]};hN=f(LN[0],-14);hF=f(LF[0],-10)}
+ const AN=ik(sh,hN,LEN.ua*am,LEN.fa*am,p.eb),AF=ik([sh[0]+4,sh[1]],hF,LEN.ua*am,LEN.fa*am,p.eb);
+ return {h,neck,sh,hc,LN,LF,AN,AF,p}}
+function seg(x,a,b,w,col){x.strokeStyle=col;x.lineWidth=w;x.lineCap='round';x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(b[0],b[1]);x.stroke()}
+function drawFig(p,X,s,alpha,opt={}){
+ const S=solve(p);if(opt.hx)S.hc[0]+=opt.hx;const M=pt=>[X+pt[0]*s,GY-pt[1]*s];
+ g.save();g.globalAlpha=alpha;
+ const lw=w=>w*s;const foot=(ank,ang,col,w)=>{const r=Math.PI/180;seg(g,M(ank),M([ank[0]+40*Math.cos(ang*r),ank[1]+40*Math.sin(ang*r)]),lw(w),col)};
+ // shadow
+ if(!opt.noShadow){g.fillStyle='rgba(60,30,10,0.10)';g.beginPath();g.ellipse(X+(S.h[0]-20)*s,GY+4,120*s,12*s,0,0,7);g.fill()}
+ const edge='rgba(250,236,218,0.95)';
+ // far arm, far leg
+ seg(g,M(S.LF[0]),M(p.aF),lw(36),FAR);seg(g,M([S.h[0]+4,S.h[1]]),M(S.LF[0]),lw(42),FAR);foot(p.aF,p.fF,FAR,22);
+ seg(g,M([S.sh[0]+4,S.sh[1]]),M(S.AF[0]),lw(30),FAR);seg(g,M(S.AF[0]),M(S.AF[1]),lw(26),FAR);
+ // torso
+ seg(g,M(S.h),M(S.neck),lw(60),BODY);{const m=[S.h[0]+0.35*(S.neck[0]-S.h[0]),S.h[1]+0.35*(S.neck[1]-S.h[1])];seg(g,M(m),M(S.neck),lw(76),BODY)}
+ // head
+ const H_=M(S.hc);g.fillStyle=BODY;g.beginPath();g.arc(H_[0],H_[1],LEN.hr*s,0,7);g.fill();
+ // near leg with light edge
+ const nl=[[ [S.h,S.LN[0]],46 ],[[S.LN[0],p.aN],40]];
+ for(const [[a,b],w] of nl)seg(g,M(a),M(b),lw(w+5),edge);
+ {const r=Math.PI/180;seg(g,M(p.aN),M([p.aN[0]+40*Math.cos(p.fN*r),p.aN[1]+40*Math.sin(p.fN*r)]),lw(27),edge)}
+ for(const [[a,b],w] of nl)seg(g,M(a),M(b),lw(w),BODY);foot(p.aN,p.fN,BODY,22);
+ // heart
+ const ta=p.tor*Math.PI/180;const hp=[S.h[0]+0.7*LEN.tor*Math.cos(ta)+(-22)*Math.cos(ta-Math.PI/2)*-1,S.h[1]+0.7*LEN.tor*Math.sin(ta)+(-22)*Math.sin(ta-Math.PI/2)*-1];
+ const HP=M(hp);const hg=(opt.heart||0);
+ const rad=(26+hg*40)*s;const gr=g.createRadialGradient(HP[0],HP[1],0,HP[0],HP[1],rad);gr.addColorStop(0,'rgba(255,211,122,'+(0.75+hg*0.25)+')');gr.addColorStop(1,'rgba(255,211,122,0)');
+ g.fillStyle=gr;g.beginPath();g.arc(HP[0],HP[1],rad,0,7);g.fill();
+ g.fillStyle='#FFD37A';heartShape(HP[0],HP[1],(7+hg*3)*s);
+ // near arm with edge
+ const na=[[[S.sh,S.AN[0]],34],[[S.AN[0],S.AN[1]],30]];
+ for(const [[a,b],w] of na)seg(g,M(a),M(b),lw(w+5),edge);
+ for(const [[a,b],w] of na)seg(g,M(a),M(b),lw(w),BODY);
+ {const pa=(p.pal===undefined?null:p.pal);if(pa!==null&&!(p.fin>0.5)){const r=Math.PI/180;const w0=S.AN[1];seg(g,M(w0),M([w0[0]+20*Math.cos(pa*r),w0[1]+20*Math.sin(pa*r)]),lw(24),BODY)}}
+ if(p.fin>0.5){const r=Math.PI/180,pa=(p.pal||190)-22,w0=S.AN[1];seg(g,M(w0),M([w0[0]+14*Math.cos((pa+12)*r),w0[1]+14*Math.sin((pa+12)*r)]),lw(24),BODY);seg(g,M(w0),M([w0[0]+46*Math.cos(pa*r),w0[1]+46*Math.sin(pa*r)]),lw(10),BODY)}
+ g.restore();return {S,M,HP,H:H_}}
+function heartShape(x,y,r){g.beginPath();g.moveTo(x,y+r*0.9);g.bezierCurveTo(x-r*1.6,y-r*0.2,x-r*0.6,y-r*1.4,x,y-r*0.45);g.bezierCurveTo(x+r*0.6,y-r*1.4,x+r*1.6,y-r*0.2,x,y+r*0.9);g.fill()}
+function prayRug(X,s,a,len){g.save();g.globalAlpha=a;const x0=X-200*s,x1=X+150*s;g.fillStyle='#9E3A2E';g.beginPath();g.moveTo(x0+10,GY+2);g.lineTo(x1-10,GY+2);g.lineTo(x1,GY+14*s);g.lineTo(x0,GY+14*s);g.fill();
+ g.strokeStyle='rgba(255,230,200,0.55)';g.lineWidth=2;for(let x=x0+20;x<x1-10;x+=26*s){g.beginPath();g.moveTo(x,GY+5);g.lineTo(x+8*s,GY+11*s);g.stroke()}g.restore()}
+
+// pose timeline
+const PT=[[0,'DOWN']];
+function key(i,n){PT.push([T0(i)-0.05,n])}
+key(38,'DOWN');key(50,'TAKBIR');key(62,'CHEST');key(97,'RUKU');key(120,'TAKBIR');key(134,'CHEST');key(142,'SUJUD');key(165,'JALSA');key(182,'SUJUD');key(189,'CHEST');key(210,'TASH');key(216,'TAKBIR');key(221,'CHEST');key(225,'TAWA');key(275,'TAWA0');
+function poseAt(t){let i=0;while(i+1<PT.length&&PT[i+1][0]<=t)i++;const cur=POS[PT[i][1]];if(i===0)return cur;const prev=POS[PT[i-1][1]];const u=(t-PT[i][0])/0.55;return u>=1?cur:mixPose(prev,cur,ease(u))}
+
+// ---------- BACKGROUND ----------
+const BG=[[0,'#F4E7D2','#EAD5B6'],[STEPSTART[1],'#F7E6D6','#EFD4BE'],[STEPSTART[6],'#F8E3CE','#F0CDAE'],[STEPSTART[11],'#F5E9D6','#ECD8BA'],[CLOSE0,'#E6F1E6','#D2E6D6'],[CARD0,'#FBF4E8','#F2E6D2']];
+function hex(c){return [parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)]}
+function mixc(a,b,t){const A=hex(a),B=hex(b);return 'rgb('+A.map((v,i)=>Math.round(lerp(v,B[i],t))).join(',')+')'}
+let GRAIN=null;
+function makeGrain(){const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');const im=x.createImageData(W,H);const r=rng(7);for(let i=0;i<im.data.length;i+=4){const v=r()*255;im.data[i]=im.data[i+1]=im.data[i+2]=v;im.data[i+3]=10}x.putImageData(im,0,0);GRAIN=c}
+function drawBG(t){let i=0;while(i+1<BG.length&&BG[i+1][0]<=t)i++;let top=BG[i][1],bot=BG[i][2];
+ if(i>0){const u=ease((t-BG[i][0])/0.9);top=mixc(BG[i-1][1],BG[i][1],u);bot=mixc(BG[i-1][2],BG[i][2],u)}else{top=mixc(top,top,0);bot=mixc(bot,bot,0)}
+ const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,top);gr.addColorStop(1,bot);g.fillStyle=gr;g.fillRect(0,0,W,H);
+ const gw=g.createRadialGradient(560,1180,0,560,1180,620);gw.addColorStop(0,'rgba(255,214,160,0.30)');gw.addColorStop(1,'rgba(255,214,160,0)');g.fillStyle=gw;g.fillRect(0,0,W,H);
+ // floor
+ g.fillStyle='rgba(255,255,255,0.16)';g.fillRect(0,GY,W,H-GY);
+ g.strokeStyle='rgba(120,80,50,0.25)';g.lineWidth=3;g.beginPath();g.moveTo(0,GY);g.lineTo(W,GY);g.stroke();
+ g.setLineDash([22,16]);g.strokeStyle='rgba(120,80,50,0.20)';g.lineWidth=2;g.beginPath();g.moveTo(0,GY+42);g.lineTo(W,GY+42);g.stroke();g.setLineDash([]);
+ g.drawImage(GRAIN,0,0)}
+
+// ---------- TEXT ----------
+function fitFont(lines,font,max){g.font=font;let m=0;for(const l of lines){m=Math.max(m,g.measureText(l).width)}return m>max?max/m:1}
+function wordsW(idx,font){g.font=font;const sp=g.measureText(' ').width;const ws=idx.map(i=>g.measureText(disp(i)).width);return {ws,sp,tot:ws.reduce((a,b)=>a+b,0)+sp*(idx.length-1)}}
+function drawPage(p,t,y0){
+ const fade=clamp((t-p.t0)/0.25,0,1)*clamp((p.t1+0.05-t)/0.25,0,1);if(fade<=0)return;
+ const isD=p.k==='d';const fs=isD?(p.small?74:84):(p.big?80:66);const lh=isD?(p.small?100:114):(p.big?112:96);
+ const font=isD?`700 ${fs}px Amiri`:`900 ${fs}px Taj`;
+ // scale to fit
+ let sc=1;for(const L of p.L){const m=wordsW(L,font);if(m.tot>(isD?840:900))sc=Math.min(sc,(isD?840:900)/m.tot)}
+ const fsz=fs*sc,F=isD?`700 ${fsz}px Amiri`:`900 ${fsz}px Taj`;
+ const hgt=p.L.length*lh*sc;
+ g.save();g.globalAlpha=fade;
+ if(isD){const cw=940,ch=hgt+70,cx=(W-cw)/2,cy=y0-20;g.shadowColor='rgba(90,60,30,0.18)';g.shadowBlur=30;g.shadowOffsetY=8;g.fillStyle='#FFFBF3';rr(cx,cy,cw,ch,28);g.fill();g.shadowColor='transparent';g.strokeStyle=OL;g.lineWidth=3;rr(cx,cy,cw,ch,28);g.stroke()}
+ g.textBaseline='middle';g.direction='rtl';
+ p.L.forEach((L,li)=>{const m=wordsW(L,F);let x=W/2+m.tot/2;const y=y0+(isD?35:0)+li*lh*sc+lh*sc/2;
+  L.forEach((i,k)=>{const st=ST[i]-0.08;const a=clamp((t-st)/0.12,0,1);const w=m.ws[k];
+   if(a>0){g.globalAlpha=fade*a;const key=(p.key||[]).includes(i);g.fillStyle=key?OL:(isD?'#4A2C14':INK);g.font=F;g.textAlign='right';g.fillText(disp(i),x,y+(1-a)*10)}
+   x-=w+m.sp});
+ });
+ g.restore();return hgt}
+function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+function txt(s,x,y,font,col,a=1,align='center'){g.save();g.globalAlpha=a;g.font=font;g.fillStyle=col;g.textAlign=align;g.textBaseline='middle';g.direction='rtl';g.fillText(s,x,y);g.restore()}
+
+// ---------- RUG COUNTER (top) ----------
+function stepAt(t){let s=0;for(let k=1;k<=14;k++)if(t>=STEPSTART[k]-0.2)s=k;return s}
+function drawRugCounter(t){const a=clamp((t-QUESTION)/0.6,0,1)*clamp((CARD0+0.1-t)/0.4,0,1);if(a<=0)return;
+ const x0=150,w=780,y=96,h=92,n=14,bw=(w-36)/n;g.save();g.globalAlpha=a;
+ // fringes
+ g.strokeStyle='#CDB596';g.lineWidth=3;for(let i=0;i<9;i++){const yy=y+8+i*(h-16)/8;seg(g,[x0-16,yy],[x0,yy],3,'#CDB596');seg(g,[x0+w,yy],[x0+w+16,yy],3,'#CDB596')}
+ g.fillStyle='#F1E4CF';rr(x0,y,w,h,12);g.fill();g.strokeStyle='#CDB596';g.lineWidth=3;rr(x0,y,w,h,12);g.stroke();
+ const cur=stepAt(t);const done=t>=CLOSE0;
+ for(let k=1;k<=n;k++){const bx=x0+w-18-k*bw+2,bwid=bw-4;let f=0;if(k<cur)f=1;else if(k===cur)f=ease((t-STEPSTART[k]+0.2)/0.5);
+  g.strokeStyle='rgba(160,130,95,0.35)';g.lineWidth=2;g.setLineDash([5,5]);g.strokeRect(bx,y+10,bwid,h-20);g.setLineDash([]);
+  if(f>0){const hh=(h-20)*f;const gr=g.createLinearGradient(0,y,0,y+h);gr.addColorStop(0,'#9C9830');gr.addColorStop(1,OL);g.fillStyle=gr;g.fillRect(bx,y+10,bwid,hh);
+   g.strokeStyle='rgba(255,246,214,0.8)';g.lineWidth=2;const cx=bx+bwid/2;for(let j=0;j<3;j++){const cy=y+24+j*22;if(cy+8<y+10+hh){g.beginPath();g.moveTo(cx,cy-7);g.lineTo(cx+7,cy);g.lineTo(cx,cy+7);g.lineTo(cx-7,cy);g.closePath();g.stroke()}}
+   if(k===cur&&!done){const pu=0.5+0.5*Math.sin((t-STEPSTART[k])*5);g.strokeStyle=`rgba(255,220,120,${0.4+0.4*pu})`;g.lineWidth=3;g.strokeRect(bx-2,y+8,bwid+4,h-16)}}}
+ if(done){const u=(t-CLOSE0);const gl=g.createLinearGradient(x0,0,x0+w,0);const ph=(u*0.5)%1.6-0.3;gl.addColorStop(clamp(ph-0.15,0,1),'rgba(255,240,180,0)');gl.addColorStop(clamp(ph,0,1),'rgba(255,240,180,0.55)');gl.addColorStop(clamp(ph+0.15,0,1),'rgba(255,240,180,0)');g.fillStyle=gl;rr(x0,y,w,h,12);g.fill()}
+ g.restore()}
+
+// ---------- INTRO VISUALS ----------
+function crescent(x,y,r,col,bg){g.fillStyle=col;g.beginPath();g.arc(x,y,r,0,7);g.fill();g.fillStyle=bg;g.beginPath();g.arc(x+r*0.45,y-r*0.2,r*0.85,0,7);g.fill()}
+function house(x,w,h,col){g.fillStyle=col;g.fillRect(x,GY-h,w,h);g.fillStyle='rgba(120,80,50,0.35)';g.fillRect(x+w*0.3,GY-h*0.55,w*0.18,h*0.22);g.fillRect(x+w*0.58,GY-h*0.55,w*0.18,h*0.22);for(let i=0;i<3;i++){g.fillStyle=col;g.fillRect(x+i*w/3+4,GY-h-12,w/3-14,12)}}
+function palm(x,h,a){g.save();g.globalAlpha=a;seg(g,[x,GY],[x+6,GY-h],12,'#8B6A45');g.strokeStyle='#5E8F3A';g.lineWidth=12;g.lineCap='round';for(const d of [-1,1]){g.beginPath();g.moveTo(x+6,GY-h);g.quadraticCurveTo(x+6+d*50,GY-h-30,x+6+d*95,GY-h+28);g.stroke();g.beginPath();g.moveTo(x+6,GY-h);g.quadraticCurveTo(x+6+d*40,GY-h-10,x+6+d*70,GY-h+45);g.stroke()}g.restore()}
+function drawIntro(t){const a=clamp((QUESTION+0.4-t)/0.5,0,1);if(a<=0)return;g.save();g.globalAlpha=a;
+ // madinah on right
+ const m=clamp((t-OFF+0.2)/0.6,0,1);g.globalAlpha=a*m;house(700,120,120,'#E3C9A2');house(810,90,170,'#DDBF94');house(895,120,100,'#E6CDA8');palm(660,190,a*m);
+ txt('المدينة',840,GY+80,'700 34px Taj',SUB,a*m);
+ // 20 nights
+ const n0=T0(18);for(let k=0;k<20;k++){const row=Math.floor(k/10),col=k%10;const x=880-col*72,y=1040+row*86;const ap=clamp((t-n0-k*0.06)/0.25,0,1);
+  g.globalAlpha=a*(0.25+0.75*ap);crescent(x,y,22,ap>0?'#C9A23A':'#D9C7A8',ap>0?'#F4E7D2':'#F4E7D2')}
+ g.globalAlpha=a;if(t>n0)txt('عشرون ليلة',560,1240,'900 42px Taj',OL,clamp((t-n0-1.2)/0.4,0,1)*a);
+ // road home
+ const r0=T0(20);const rp=ease((t-r0)/1.6);if(rp>0){g.globalAlpha=a;g.setLineDash([18,14]);g.strokeStyle='#B58C5E';g.lineWidth=6;g.beginPath();g.moveTo(690,GY-20);g.lineTo(690-rp*560,GY-20);g.stroke();g.setLineDash([]);
+  const ha=clamp((t-r0-1.0)/0.5,0,1);g.globalAlpha=a*ha;house(60,80,80,'#E8D2B0');house(140,70,110,'#E2C7A0');txt('أهلهم',145,GY+80,'700 34px Taj',SUB,a*ha)}
+ g.restore()}
+
+// ---------- OVERLAYS per step ----------
+function ring(cx,cy,r,p,col,a){if(p<=0)return;g.save();g.globalAlpha=a;g.strokeStyle=col;g.lineWidth=7;g.lineCap='round';g.beginPath();g.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+p*Math.PI*2);g.stroke();g.restore()}
+function drawOverlays(t,F,X){const st=stepAt(t);const S=F.S,M=F.M;
+ // step1 qibla tag + heart
+ if(st===1){const a=clamp((t-T0(38))/0.4,0,1)*clamp((STEPSTART[2]-t)/0.3,0,1);g.save();g.globalAlpha=a;g.fillStyle=OL;rr(150,930,190,64,32);g.fill();txt('القبلة',260,963,'900 36px Taj','#FFF8E6',a);
+  g.fillStyle='#FFF8E6';g.beginPath();g.moveTo(170,962);g.lineTo(192,948);g.lineTo(192,976);g.fill();g.restore()}
+ // step2 guides
+ if(st===2){const a1=clamp((t-T0(54))/0.3,0,1)*clamp((T0(58)-t)/0.3,0,1);if(a1>0){g.save();g.globalAlpha=a1;g.setLineDash([10,8]);g.strokeStyle=OL;g.lineWidth=3;
+   const shY=M(S.sh)[1],earY=M(S.hc)[1];g.beginPath();g.moveTo(X-170,shY);g.lineTo(X+120,shY);g.stroke();g.beginPath();g.moveTo(X-170,earY);g.lineTo(X+120,earY);g.stroke();g.setLineDash([]);
+   txt('المنكبان',X+130,shY,'700 32px Taj',OL,a1,'right');txt('الأذنان',X+130,earY,'700 32px Taj',OL,clamp((t-T0(56))/0.3,0,1)*a1,'right');g.restore()}
+  const a2=clamp((t-T0(58))/0.3,0,1)*clamp((STEPSTART[3]-t)/0.3,0,1);if(a2>0){const H_=F.H;const tx=X-150,ty=GY+4;const pr=ease((t-T0(58))/0.8);g.save();g.globalAlpha=a2;g.setLineDash([6,10]);g.strokeStyle=OL;g.lineWidth=4;g.beginPath();g.moveTo(H_[0]-20,H_[1]+10);g.lineTo(lerp(H_[0]-20,tx,pr),lerp(H_[1]+10,ty,pr));g.stroke();g.setLineDash([]);
+   const gr=g.createRadialGradient(tx,ty,0,tx,ty,40);gr.addColorStop(0,'rgba(166,162,58,0.8)');gr.addColorStop(1,'rgba(166,162,58,0)');g.fillStyle=gr;g.beginPath();g.ellipse(tx,ty,48,16,0,0,7);g.fill();g.restore()}}
+ // step6 back level + ring
+ if(st===6){const a=clamp((t-T0(101))/0.3,0,1)*clamp((STEPSTART[7]-t)/0.3,0,1);if(a>0){const A=M(S.h),B=M(S.hc);g.save();g.globalAlpha=a;g.setLineDash([12,8]);g.strokeStyle=OL;g.lineWidth=4;g.beginPath();g.moveTo(A[0]+40,A[1]-48);g.lineTo(B[0]-50,A[1]-48);g.stroke();g.setLineDash([]);g.restore()}
+  const r=clamp((t-T0(109))/1.2,0,1);ring(X-60,GY-150,190,r,OL,clamp((STEPSTART[7]-t)/0.3,0,1))}
+ // step8 seven points
+ if(st===8||st===10){const pts=[[F.H[0]-14,GY-4,147],[M(S.AN[1])[0],GY-4,150],[M(S.AF[1])[0]+8,GY-4,150],[M(S.LN[0])[0],GY-4,151],[M(S.LF[0])[0]+8,GY-4,151],[M([S.p.aN[0]+40*Math.cos(S.p.fN*Math.PI/180),0])[0],GY-4,152],[M([S.p.aF[0]+40*Math.cos(S.p.fF*Math.PI/180),0])[0]+6,GY-4,152]];
+  const base=st===8?0:1;const fa=clamp((STEPSTART[st+1]-t)/0.3,0,1);
+  pts.forEach((q,k)=>{const on=st===8?clamp((t-T0(q[2])-(k%2)*0.15)/0.25,0,1):clamp((t-STEPSTART[10]-0.6)/0.4,0,1);if(on<=0)return;const gr=g.createRadialGradient(q[0],q[1],0,q[0],q[1],26);gr.addColorStop(0,`rgba(214,190,60,${0.9*on*fa})`);gr.addColorStop(1,'rgba(214,190,60,0)');g.fillStyle=gr;g.beginPath();g.arc(q[0],q[1],26,0,7);g.fill();
+   g.fillStyle=`rgba(126,122,30,${on*fa})`;g.beginPath();g.arc(q[0],q[1],7,0,7);g.fill();
+   });
+  if(st===8){const lab=[['الجبهة مع الأنف',F.H[0]-14,147,265],['اليدان',M(S.AN[1])[0],150,478],['الركبتان',M(S.LN[0])[0]+4,151,650],['أطراف القدمين',M([S.p.aN[0]+40*Math.cos(S.p.fN*Math.PI/180),0])[0]+10,152,860]];lab.forEach(([l,x,ti,lx])=>{const on=clamp((t-T0(ti))/0.3,0,1)*fa;if(on<=0)return;g.save();g.globalAlpha=on;g.strokeStyle='rgba(126,122,30,0.55)';g.lineWidth=2.5;g.beginPath();g.moveTo(x,GY+10);g.lineTo(lx,GY+62);g.stroke();g.restore();txt(l,lx,GY+92,'900 32px Taj',OL,on)})}
+  if(st===8){const r=clamp((t-T0(154))/1.2,0,1);ring(X-40,GY-120,175,r,OL,fa)}}
+ // step9 feet highlight
+ if(st===9){const f1=clamp((t-T0(168))/0.3,0,1)*clamp((T0(173)+0.2-t)/0.3,0,1),f2=clamp((t-T0(173))/0.3,0,1)*clamp((STEPSTART[10]-t)/0.3,0,1);
+  const L=M(S.p.aF),R=M(S.p.aN);if(f1>0){g.save();g.globalAlpha=f1;g.strokeStyle=OL;g.lineWidth=5;g.beginPath();g.ellipse(L[0]+30,L[1]-4,62,26,0,0,7);g.stroke();txt('اليسرى مفروشة',L[0]+30,GY+70,'900 34px Taj',OL,f1);g.restore()}
+  if(f2>0){g.save();g.globalAlpha=f2;g.strokeStyle=OL;g.lineWidth=5;g.beginPath();g.ellipse(R[0],R[1]+12,34,58,0,0,7);g.stroke();txt('اليمنى منصوبة',R[0]+40,GY+70,'900 34px Taj',OL,f2);g.restore()}}
+ // step11 mini rakah row on floor
+ if(st===11){const a=clamp((t-T0(198))/0.4,0,1)*clamp((STEPSTART[12]-t)/0.3,0,1);if(a>0){const seq=['CHEST','RUKU','CHEST','SUJUD','JALSA','SUJUD'];const xs=[930,780,630,480,330,180];
+   seq.forEach((n,k)=>{const ak=a*clamp((t-T0(198)-k*0.22)/0.3,0,1);if(ak<=0)return;g.save();g.translate(0,330);drawFig(POS[n],xs[k],0.30,ak,{noShadow:1});g.restore();if(k<5){const ax=xs[k]-78,ay=GY+250;g.save();g.globalAlpha=ak;g.strokeStyle=OL;g.lineWidth=5;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(ax+12,ay-12);g.lineTo(ax,ay);g.lineTo(ax+12,ay+12);g.stroke();g.restore()}});
+   txt('ركعة كالأولى',560,GY+380,'900 38px Taj',OL,a)}}
+ // step13 ring at salah upon prophet
+ if(st===13){const r=clamp((t-T0(231))/1.0,0,1);ring(X-20,GY-210,170,r,OL,clamp((T0(238)-t)/0.4,0,1)*0.8)}
+ // step14 taslim arcs
+ if(st===14){for(const [ti,x,lab,yy] of [[263,540,'التسليمة الأولى عن اليمين',0],[269,540,'والثانية عن الشمال',72]]){const a=clamp((t-T0(ti))/0.3,0,1)*clamp((CLOSE0-t)/0.3,0,1);if(a<=0)continue;g.save();g.globalAlpha=a;g.font='900 32px Taj';const w=g.measureText(lab).width+44;g.fillStyle=OL;rr(x-w/2,GY+70+yy,w,58,29);g.fill();g.restore();txt(lab,x,GY+100+yy,'900 32px Taj','#FFF8E6',a)}}
+}
+
+// ---------- COVER ----------
+function drawCover(t,a){if(a<=0)return;g.save();g.globalAlpha=a;
+ const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#FBF1E1');gr.addColorStop(1,'#F1DFC4');g.fillStyle=gr;g.fillRect(0,0,W,H);
+ const gw=g.createRadialGradient(540,1250,0,540,1250,600);gw.addColorStop(0,'rgba(255,205,140,0.35)');gw.addColorStop(1,'rgba(255,205,140,0)');g.fillStyle=gw;g.fillRect(0,0,W,H);
+ g.fillStyle='rgba(255,255,255,0.16)';g.fillRect(0,GY,W,H-GY);g.strokeStyle='rgba(120,80,50,0.25)';g.lineWidth=3;g.beginPath();g.moveTo(0,GY);g.lineTo(W,GY);g.stroke();
+ g.setLineDash([22,16]);g.strokeStyle='rgba(120,80,50,0.2)';g.lineWidth=2;g.beginPath();g.moveTo(0,GY+42);g.lineTo(W,GY+42);g.stroke();g.setLineDash([]);g.drawImage(GRAIN,0,0);
+ const br=1+0.012*Math.sin(t*3);g.save();g.translate(540,235);g.scale(br,br);txt('أرِحنا بها',0,0,'700 190px Amiri',OL,1);g.restore();
+ txt('رواه أبو داود',540,410,'700 32px Taj',SUB,1);
+ g.font='900 64px Taj';const sw=g.measureText('سلسلة في أحكام الصلاة').width;g.fillStyle='rgba(240,150,70,0.38)';rr(540-sw/2-14,523,sw+28,30,15);g.fill();
+ txt('سلسلة في أحكام الصلاة',540,508,'900 64px Taj',INK,1);
+ txt('الحلقة العاشرة',540,622,'900 42px Taj',SUB,1);
+ g.font='900 70px Taj';const cw=g.measureText('صفة الصلاة').width+110;g.shadowColor='rgba(80,70,20,0.3)';g.shadowBlur=24;g.shadowOffsetY=8;g.fillStyle=OL;rr(540-cw/2,672,cw,110,55);g.fill();g.shadowColor='transparent';
+ txt('صفة الصلاة',540,728,'900 70px Taj','#FFF8E6',1);
+ g.font='900 32px Taj';const nw=g.measureText('نسخة تعليمية').width+50;g.strokeStyle=OL;g.lineWidth=3;g.fillStyle='#FFF8EC';rr(540-nw/2,818,nw,58,29);g.fill();g.stroke();txt('نسخة تعليمية',540,848,'900 32px Taj',OL,1);
+ // four mini postures
+ const seq=['CHEST','RUKU','SUJUD','JALSA'];const xs=[915,700,440,170];
+ prayRug(540,1.6,1);
+ seq.forEach((n,k)=>{drawFig(POS[n],xs[k],0.84,1,{noShadow:0,heart:0.15+0.15*Math.sin(t*4+k)});if(k<3){const ax=[815,600,315][k],ay=GY-300;g.strokeStyle=OL2;g.lineWidth=7;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(ax+22,ay-18);g.lineTo(ax,ay);g.lineTo(ax+22,ay+18);g.stroke()}});
+ g.restore()}
+
+// ---------- CLOSING CARD ----------
+function drawCard(t){const a=clamp((t-CARD0)/0.5,0,1);if(a<=0)return;g.save();g.globalAlpha=a;
+ const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#FBF4E8');gr.addColorStop(1,'#F2E4CE');g.fillStyle=gr;g.fillRect(0,0,W,H);g.drawImage(GRAIN,0,0);
+ const gw=g.createRadialGradient(540,800,0,540,800,560);gw.addColorStop(0,'rgba(217,213,154,0.35)');gw.addColorStop(1,'rgba(217,213,154,0)');g.fillStyle=gw;g.fillRect(0,0,W,H);
+ txt('قال رسول الله صلى الله عليه وسلم',540,560,'900 50px Taj',SUB,clamp((t-CARD0-0.2)/0.4,0,1));
+ const ca=clamp((t-CARD0-0.6)/0.5,0,1);g.globalAlpha=a*ca;g.shadowColor='rgba(90,60,30,0.18)';g.shadowBlur=30;g.shadowOffsetY=8;g.fillStyle='#FFFBF3';rr(110,630,860,370,30);g.fill();g.shadowColor='transparent';g.strokeStyle=OL;g.lineWidth=3;rr(110,630,860,370,30);g.stroke();
+ txt('«صلوا كما',540,720,'700 96px Amiri','#4A2C14',ca);g.save();g.font='700 96px Amiri';g.restore();
+ txt('رأيتموني أصلي»',540,885,'700 96px Amiri',OL,ca);txt('رواه البخاري',540,1045,'700 32px Taj',SUB,clamp((t-CARD0-1.2)/0.4,0,1));
+ const na=clamp((t-CARD0-1.8)/0.5,0,1);txt('الحلقة القادمة',540,1250,'900 44px Taj',SUB,na);
+ g.globalAlpha=a*na;g.font='900 64px Taj';const cw=g.measureText('الأذكار بعد السلام').width+100;g.fillStyle=OL;rr(540-cw/2,1300,cw,104,52);g.fill();txt('الأذكار بعد السلام',540,1353,'900 64px Taj','#FFF8E6',na);
+ g.restore()}
+
+// ---------- RENDER ----------
+function heartAt(t){let h=0;const b=T0(41);if(t>b)h=Math.max(h,Math.exp(-(t-b)*1.2)*(0.6+0.4*Math.abs(Math.sin((t-b)*7))));
+ if(t>CLOSE0){h=Math.max(h,0.35+0.25*Math.abs(Math.sin((t-CLOSE0)*3)));if(t>T0(289))h=Math.max(h,0.6+0.35*Math.abs(Math.sin((t-T0(289))*3.5)))}
+ const c=T0(231);if(t>c&&t<T0(238))h=Math.max(h,0.5);return h}
+function render(T){
+ if(!GRAIN){makeGrain();precompute()}
+ const t=T;g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,W,H);
+ drawBG(t);
+ drawIntro(t);
+ drawRugCounter(t);
+ // header (counter)
+ const s=stepAt(t);if(s>0&&t<CLOSE0){const ap=eob((t-STEPSTART[s]+0.2)/0.45);const fa=clamp((CLOSE0-t)/0.3,0,1);
+  g.save();g.translate(540,300);g.scale(0.7+0.3*ap,0.7+0.3*ap);txt(ar(s),0,0,'900 140px Kufi',OL,clamp(ap,0,1)*fa);g.restore();
+  txt('الخطوة '+ORD[s]+' من ١٤',540,405,'900 38px Taj',SUB,fa)}
+ // pages
+ for(const p of P){if(t<p.t0||t>p.t1+0.1)continue;const y0=p.step===0?(p.big?330:250):(p.step===15?330:470);drawPage(p,t,y0)}
+ // source line
+ let src=null,sa=0;for(const p of P){if(p.src&&t>=ST[p.srcAt]+0.25&&t<p.t1+0.05){src=p.src;sa=clamp((t-ST[p.srcAt]-0.25)/0.3,0,1)*clamp((p.t1+0.05-t)/0.3,0,1)}}
+ if(!src&&s>=1&&s<=2){src='مختصرة من رسالة الشيخ ابن باز «كيفية صلاة النبي صلى الله عليه وسلم»';sa=clamp((t-STEPSTART[1]-0.5)/0.4,0,1)*clamp((STEPSTART[3]-0.2-t)/0.3,0,1)}
+ // figure
+ const fa=clamp((t-QUESTION-0.6)/0.6,0,1)*clamp((CARD0+0.2-t)/0.4,0,1);const X=560;
+ if(fa>0){prayRug(X,1,fa);let hx=0;if(t>T0(263)&&t<CLOSE0){hx=-7*ease((t-T0(263))/0.4)+14*ease((t-T0(269))/0.4)*(t>T0(269)?1:0);hx*=clamp((CLOSE0-t)/0.4,0,1)}const F=drawFig(poseAt(t),X,1,fa,{heart:heartAt(t),hx});if(fa>0.5)drawOverlays(t,F,X)}
+ if(src)txt(src,540,1710,'700 30px Taj',SUB,sa);
+ // cover
+ const ca=t<OFF?1:clamp(1-(t-OFF)/0.35,0,1);drawCover(t,ca);
+ drawCard(t);
+}
+window.posetest=function(){if(!GRAIN){makeGrain();precompute()};drawBG(5);const ks=['DOWN','CHEST','TAKBIR','RUKU','SUJUD','JALSA','TASH','TAWA'];ks.forEach((k,i)=>{const X=180+(i%4)*240;g.save();g.translate(0,i<4?-700:-200);drawFig(POS[k],X,0.62,1,{});g.strokeStyle='rgba(0,0,255,0.35)';g.lineWidth=1;g.beginPath();g.moveTo(X-150,GY-264*0.62);g.lineTo(X+150,GY-264*0.62);g.stroke();txt(k,X,GY+60,'700 30px Taj','#000');g.restore()})};window.posesheet=function(){if(!GRAIN){makeGrain();precompute()};drawBG(5);const ks=[['DOWN','القيام'],['TAKBIR','التكبير ورفع اليدين'],['CHEST','اليمنى على اليسرى على الصدر'],['RUKU','الركوع'],['SUJUD','السجود'],['JALSA','الجلسة بين السجدتين'],['TASH','التشهد الأول افتراشًا'],['TAWA','التشهد الأخير تورّكًا']];ks.forEach(([k,l],i)=>{const col=i%2,row=Math.floor(i/2);const X=col?330:800;const oy=[470,935,1340,1745][row]-GY;g.save();g.translate(0,oy);prayRug(X,0.9,1);drawFig(POS[k],X,0.72,1,{});g.restore();txt(l,X-20,GY+oy+50,'900 34px Taj',OL,1)})};window.render=render;window.TOTAL=TOTAL;window.INFO={STEPSTART,CLOSE0,CARD0,TOTAL,QUESTION};
+</script></body></html>
